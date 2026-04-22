@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'services/profile_manager.dart';
+import 'services/evaluation_service.dart';
 import 'screens/profile_selection_screen.dart';
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EvaluationService.init();
   runApp(const CeprunsaApp());
 }
 

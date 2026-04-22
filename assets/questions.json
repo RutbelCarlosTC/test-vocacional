@@ -1,0 +1,303 @@
+[
+  {
+    "id": 1,
+    "area": "Preferencias Profesionales",
+    "question": "¿Qué tanto te interesa el desarrollo de sistemas computacionales y la automatización de información digital?",
+    "options": [
+      {"text": "Muy Alto", "value": 7},
+      {"text": "Alto", "value": 6},
+      {"text": "Medio", "value": 4},
+      {"text": "Bajo", "value": 2}
+    ]
+  },
+  {
+    "id": 2,
+    "area": "Preferencias Profesionales",
+    "question": "¿Te sientes atraído por el estudio de las ciencias exactas y la aplicación de métodos científicos?",
+    "options": [
+      {"text": "Mucho", "value": 5},
+      {"text": "Regular", "value": 3},
+      {"text": "Poco", "value": 1}
+    ]
+  },
+  {
+    "id": 3,
+    "area": "Preferencias Profesionales",
+    "question": "¿Te gustaría participar en procesos de enseñanza o facilitación de conocimientos a otras personas?",
+    "options": [
+      {"text": "Sí, me interesa mucho", "value": 5},
+      {"text": "Me es indiferente", "value": 3},
+      {"text": "No me interesa", "value": 1}
+    ]
+  },
+  {
+    "id": 4,
+    "area": "Preferencias Profesionales",
+    "question": "¿Qué nivel de agrado sientes por la manipulación técnica de máquinas, objetos o herramientas especializadas?",
+    "options": [
+      {"text": "Muy Alto", "value": 5},
+      {"text": "Medio", "value": 3},
+      {"text": "Muy Bajo", "value": 1}
+    ]
+  },
+  {
+    "id": 5,
+    "area": "Preferencias Profesionales",
+    "question": "¿Considerarías el arte musical o la ejecución de instrumentos como una posible carrera profesional?",
+    "options": [
+      {"text": "Definitivamente sí", "value": 4},
+      {"text": "Solo como pasatiempo", "value": 2},
+      {"text": "No", "value": 1}
+    ]
+  },
+  {
+    "id": 6,
+    "area": "Preferencias Profesionales",
+    "question": "¿Te motiva la idea de diseñar, fabricar o mantener maquinaria e instalaciones industriales?",
+    "options": [
+      {"text": "Me apasiona", "value": 5},
+      {"text": "Me interesa un poco", "value": 3},
+      {"text": "No me llama la atención", "value": 1}
+    ]
+  },
+  {
+    "id": 7,
+    "area": "Preferencias Profesionales",
+    "question": "¿Qué tan interesado estás en la generación, transmisión y distribución de energía eléctrica?",
+    "options": [
+      {"text": "Muy interesado", "value": 5},
+      {"text": "Algo interesado", "value": 3},
+      {"text": "Nada interesado", "value": 1}
+    ]
+  },
+  {
+    "id": 8,
+    "area": "Preferencias Profesionales",
+    "question": "¿Te visualizas trabajando en la gestión de operaciones y toma de decisiones dentro de una organización inteligente?",
+    "options": [
+      {"text": "Sí, totalmente", "value": 5},
+      {"text": "Tal vez", "value": 3},
+      {"text": "No me veo ahí", "value": 1}
+    ]
+  },
+  {
+    "id": 9,
+    "area": "Preferencias Profesionales",
+    "question": "¿Te interesa el diseño y planificación de proyectos mineros o la extracción de recursos naturales?",
+    "options": [
+      {"text": "Sí", "value": 5},
+      {"text": "Un poco", "value": 3},
+      {"text": "No", "value": 1}
+    ]
+  },
+  {
+    "id": 10,
+    "area": "Preferencias Profesionales",
+    "question": "¿Qué tanto te motiva la investigación de nuevos materiales y tecnologías aplicadas al campo textil?",
+    "options": [
+      {"text": "Mucho", "value": 5},
+      {"text": "Regular", "value": 3},
+      {"text": "Nada", "value": 1}
+    ]
+  },
+  {
+    "id": 11,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Con qué facilidad puedes identificar patrones lógicos y sintetizar información compleja?",
+    "options": [
+      {"text": "Mucha facilidad", "value": 5},
+      {"text": "Con algo de dificultad", "value": 3},
+      {"text": "Mucha dificultad", "value": 1}
+    ]
+  },
+  {
+    "id": 12,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Qué tan rápido eres para resolver problemas numéricos mediante el cálculo mental?",
+    "options": [
+      {"text": "Muy rápido", "value": 5},
+      {"text": "Velocidad promedio", "value": 3},
+      {"text": "Lento", "value": 1}
+    ]
+  },
+  {
+    "id": 13,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Te resulta sencillo rotar objetos mentalmente y entender sus relaciones espaciales?",
+    "options": [
+      {"text": "Muy sencillo", "value": 5},
+      {"text": "Regular", "value": 3},
+      {"text": "Difícil", "value": 1}
+    ]
+  },
+  {
+    "id": 14,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Qué tan hábil te consideras para establecer analogías y relaciones entre conceptos verbales?",
+    "options": [
+      {"text": "Muy hábil", "value": 5},
+      {"text": "Normal", "value": 3},
+      {"text": "Poco hábil", "value": 1}
+    ]
+  },
+  {
+    "id": 15,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Puedes deducir fácilmente información faltante en un texto a partir del contexto lingüístico?",
+    "options": [
+      {"text": "Siempre", "value": 5},
+      {"text": "A veces", "value": 3},
+      {"text": "Casi nunca", "value": 1}
+    ]
+  },
+  {
+    "id": 16,
+    "area": "Aptitudes Intelectuales",
+    "question": "Ante una serie numérica, ¿encuentras el patrón lógico de forma casi instantánea?",
+    "options": [
+      {"text": "Sí, rápidamente", "value": 5},
+      {"text": "Me toma un tiempo", "value": 3},
+      {"text": "Me cuesta mucho", "value": 1}
+    ]
+  },
+  {
+    "id": 17,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Qué tan bueno eres aplicando fórmulas matemáticas para resolver problemas prácticos?",
+    "options": [
+      {"text": "Excelente", "value": 5},
+      {"text": "Bueno", "value": 3},
+      {"text": "Regular/Bajo", "value": 1}
+    ]
+  },
+  {
+    "id": 18,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Te sientes capaz de analizar y diseñar modelos matemáticos para procesos científicos?",
+    "options": [
+      {"text": "Totalmente capaz", "value": 5},
+      {"text": "Probablemente", "value": 3},
+      {"text": "No me siento capaz", "value": 1}
+    ]
+  },
+  {
+    "id": 19,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Consideras que tu vocabulario es adecuado para expresar ideas complejas?",
+    "options": [
+      {"text": "Sí, es muy amplio", "value": 5},
+      {"text": "Es suficiente", "value": 3},
+      {"text": "Necesito mejorarlo", "value": 1}
+    ]
+  },
+  {
+    "id": 20,
+    "area": "Aptitudes Intelectuales",
+    "question": "¿Qué tan eficiente eres recuperando conocimientos previos para aplicarlos a situaciones nuevas?",
+    "options": [
+      {"text": "Muy eficiente", "value": 5},
+      {"text": "Regular", "value": 3},
+      {"text": "Me cuesta recordar", "value": 1}
+    ]
+  },
+  {
+    "id": 21,
+    "area": "Características de la Personalidad",
+    "question": "Cuando te propones una meta difícil, ¿mantienes el esfuerzo hasta el final sin rendirte?",
+    "options": [
+      {"text": "Siempre", "value": 5},
+      {"text": "A veces", "value": 3},
+      {"text": "Suelo dejarlo", "value": 1}
+    ]
+  },
+  {
+    "id": 22,
+    "area": "Características de la Personalidad",
+    "question": "En un grupo de trabajo, ¿prefieres tomar el mando y dirigir a los demás?",
+    "options": [
+      {"text": "Sí, me gusta liderar", "value": 5},
+      {"text": "Prefiero escuchar primero", "value": 3},
+      {"text": "Prefiero que otro dirija", "value": 1}
+    ]
+  },
+  {
+    "id": 23,
+    "area": "Características de la Personalidad",
+    "question": "¿Qué tan importante es para ti recibir reconocimiento o atención por tus logros?",
+    "options": [
+      {"text": "Muy importante", "value": 5},
+      {"text": "Algo importante", "value": 3},
+      {"text": "Poco importante", "value": 1}
+    ]
+  },
+  {
+    "id": 24,
+    "area": "Características de la Personalidad",
+    "question": "¿Cómo reaccionas ante un fracaso o una tarea que no sale como esperabas?",
+    "options": [
+      {"text": "Lo intento de nuevo", "value": 5},
+      {"text": "Me frustro un poco", "value": 3},
+      {"text": "Suelo abandonarla", "value": 1}
+    ]
+  },
+  {
+    "id": 25,
+    "area": "Características de la Personalidad",
+    "question": "Al tomar decisiones importantes, ¿te guías más por tu criterio propio o por lo que otros esperan de ti?",
+    "options": [
+      {"text": "Mi propio criterio", "value": 5},
+      {"text": "Ambos por igual", "value": 3},
+      {"text": "Lo que otros sugieren", "value": 1}
+    ]
+  },
+  {
+    "id": 26,
+    "area": "Características de la Personalidad",
+    "question": "¿Qué tanto disfrutas de las rutinas establecidas frente a los cambios constantes?",
+    "options": [
+      {"text": "Prefiero las rutinas", "value": 5},
+      {"text": "Me es igual", "value": 3},
+      {"text": "Prefiero el cambio", "value": 1}
+    ]
+  },
+  {
+    "id": 27,
+    "area": "Características de la Personalidad",
+    "question": "¿Qué tan prioritario es para ti planificar y organizar tus actividades diarias?",
+    "options": [
+      {"text": "Muy prioritario", "value": 5},
+      {"text": "A veces lo hago", "value": 3},
+      {"text": "No es mi prioridad", "value": 1}
+    ]
+  },
+  {
+    "id": 28,
+    "area": "Características de la Personalidad",
+    "question": "¿Prefieres tener un círculo de amistades pequeño y cercano en lugar de grupos sociales masivos?",
+    "options": [
+      {"text": "Sí, prefiero pocos", "value": 5},
+      {"text": "Me da igual", "value": 3},
+      {"text": "Prefiero grupos grandes", "value": 1}
+    ]
+  },
+  {
+    "id": 29,
+    "area": "Características de la Personalidad",
+    "question": "¿Consideras que tu motivación por alcanzar tus metas es constante en el tiempo?",
+    "options": [
+      {"text": "Muy constante", "value": 5},
+      {"text": "Depende de la tarea", "value": 3},
+      {"text": "Poco constante", "value": 1}
+    ]
+  },
+  {
+    "id": 30,
+    "area": "Características de la Personalidad",
+    "question": "¿Te sientes cómodo trabajando en tareas que no requieren mucha exposición pública?",
+    "options": [
+      {"text": "Muy cómodo", "value": 5},
+      {"text": "Algo cómodo", "value": 3},
+      {"text": "Prefiero exponerme", "value": 1}
+    ]
+  }
+]
