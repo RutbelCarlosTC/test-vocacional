@@ -5,33 +5,27 @@ import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
 
 class EvaluationService {
-  static const String _boxName = 'evaluations';
+  static const String _boxName = 'area_progress_v3';
 
-  // Singleton
   static final EvaluationService _instance = EvaluationService._internal();
   factory EvaluationService() => _instance;
   EvaluationService._internal();
 
-  // Cache de preguntas
   List<QuestionModel>? _allQuestions;
 
-  // ──────────────────────────────────────────────
-  // Inicialización de Hive
-  // ──────────────────────────────────────────────
+  // ── Inicialización ──────────────────────────────────────
 
   static Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(AnswerRecordAdapter());
-    Hive.registerAdapter(AreaResultAdapter());
-    Hive.registerAdapter(EvaluationResultAdapter());
-    await Hive.openBox<EvaluationResult>(_boxName);
+    Hive.registerAdapter(AreaAttemptAdapter());
+    Hive.registerAdapter(AreaProgressAdapter());
+    await Hive.openBox<AreaProgress>(_boxName);
   }
 
-  Box<EvaluationResult> get _box => Hive.box<EvaluationResult>(_boxName);
+  Box<AreaProgress> get _box => Hive.box<AreaProgress>(_boxName);
 
-  // ──────────────────────────────────────────────
-  // Carga de preguntas desde JSON
-  // ──────────────────────────────────────────────
+  // ── Carga de preguntas ──────────────────────────────────
 
   Future<List<QuestionModel>> loadAllQuestions() async {
     if (_allQuestions != null) return _allQuestions!;
@@ -48,59 +42,129 @@ class EvaluationService {
     return all.where((q) => q.area == area.jsonKey).toList();
   }
 
-  // ──────────────────────────────────────────────
-  // Gestión de evaluaciones en Hive
-  // ──────────────────────────────────────────────
+  // ── Acceso a AreaProgress ────────────────────────────────
 
-  /// Clave única: profileId + area
-  String _key(String profileId, String area) => '${profileId}_$area';
+  String _key(String profileId, EvaluationArea area) =>
+      '${profileId}_${area.jsonKey}';
 
-  /// Obtiene el resultado (completo o parcial) de un área para un perfil
-  EvaluationResult? getResult(String profileId, EvaluationArea area) {
-    return _box.get(_key(profileId, area.jsonKey));
+  AreaProgress getProgress(String profileId, EvaluationArea area) {
+    return _box.get(_key(profileId, area)) ??
+        AreaProgress(
+          profileId: profileId,
+          area: area.jsonKey,
+          attempts: [],
+          draftAnswers: [],
+          draftLastIndex: 0,
+        );
   }
 
-  /// Verifica si un área ya fue completada
-  bool isAreaCompleted(String profileId, EvaluationArea area) {
-    return getResult(profileId, area)?.completed ?? false;
-  }
+  // ── Guardar borrador (progreso parcial) ──────────────────
 
-  /// Guarda o actualiza el progreso de una evaluación
-  Future<void> saveProgress({
+  Future<void> saveDraft({
     required String profileId,
     required EvaluationArea area,
     required List<AnswerRecord> answers,
-    required int totalScore,
-    required int maxPossibleScore,
-    required bool completed,
-    required int lastAnsweredIndex,
+    required int lastIndex,
   }) async {
-    final key = _key(profileId, area.jsonKey);
-    final existing = _box.get(key);
+    final progress = getProgress(profileId, area);
+    final updated = progress.copyWith(
+      draftAnswers: answers,
+      draftLastIndex: lastIndex,
+    );
+    await _box.put(_key(profileId, area), updated);
+  }
 
-    final result = EvaluationResult(
-      id: existing?.id ?? _generateId(),
-      profileId: profileId,
-      area: area.jsonKey,
+  // ── Finalizar intento ────────────────────────────────────
+
+  Future<AreaAttempt?> finalizeAttempt({
+    required String profileId,
+    required EvaluationArea area,
+    required List<AnswerRecord> answers,
+    required List<QuestionModel> questions,
+  }) async {
+    final progress = getProgress(profileId, area);
+    if (!progress.canStartNewAttempt) return null;
+
+    final totalScore = answers.fold(0, (sum, a) => sum + a.value);
+    final maxScore = _calcMaxScore(questions);
+
+    final afinidades = _calcAfinidades(area, totalScore, maxScore);
+
+    final attempt = AreaAttempt(
+      attemptNumber: progress.attempts.length + 1,
       date: DateTime.now(),
-      answers: answers,
+      area: area.jsonKey,
+      answers: List.from(answers),
       totalScore: totalScore,
-      maxPossibleScore: maxPossibleScore,
-      completed: completed,
-      lastAnsweredIndex: lastAnsweredIndex,
+      maxPossibleScore: maxScore,
+      afinidadPrimaria: afinidades[0],
+      afinidadSecundaria: afinidades[1],
+      afinidadTerciaria: afinidades[2],
     );
 
-    await _box.put(key, result);
+    final updated = progress.copyWith(
+      attempts: [...progress.attempts, attempt],
+      draftAnswers: [],
+      draftLastIndex: 0,
+    );
+    await _box.put(_key(profileId, area), updated);
+    return attempt;
   }
 
-  /// Devuelve todos los resultados de un perfil
-  List<EvaluationResult> getResultsForProfile(String profileId) {
-    return _box.values
-        .where((r) => r.profileId == profileId)
-        .toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
+  // ── Helpers ──────────────────────────────────────────────
+
+  int _calcMaxScore(List<QuestionModel> questions) {
+    return questions.fold(0, (sum, q) {
+      final max =
+          q.options.map((o) => o.value).reduce((a, b) => a > b ? a : b);
+      return sum + max;
+    });
   }
 
-  String _generateId() =>
-      DateTime.now().millisecondsSinceEpoch.toString();
+  /// Devuelve lista de 3 afinidades ordenadas de mayor a menor.
+  /// La lógica asigna carreras según porcentaje y área.
+  List<String> _calcAfinidades(EvaluationArea area, int score, int maxScore) {
+    final pct = maxScore == 0 ? 0.0 : score / maxScore * 100;
+
+    final Map<EvaluationArea, List<String>> tabla = {
+      EvaluationArea.preferencias: [
+        'Ingeniería de Sistemas / Ciencias',
+        'Administración / Economía',
+        'Humanidades / Educación',
+        'Arte / Diseño',
+      ],
+      EvaluationArea.aptitudes: [
+        'Matemáticas / Física / Ingeniería',
+        'Ciencias Sociales / Derecho',
+        'Arte / Comunicaciones',
+        'Técnico / Oficios especializados',
+      ],
+      EvaluationArea.personalidad: [
+        'Liderazgo / Gestión Empresarial',
+        'Docencia / Psicología',
+        'Investigación / Ciencias',
+        'Servicio Social / Voluntariado',
+      ],
+    };
+
+    final opciones = tabla[area]!;
+
+    // El índice de la primaria depende del rango de puntaje.
+    int primaryIdx;
+    if (pct >= 80) {
+      primaryIdx = 0;
+    } else if (pct >= 60) {
+      primaryIdx = 1;
+    } else if (pct >= 40) {
+      primaryIdx = 2;
+    } else {
+      primaryIdx = 3;
+    }
+
+    // Secundaria y terciaria: siguientes en la lista (rotando)
+    final secondaryIdx = (primaryIdx + 1) % opciones.length;
+    final tertiaryIdx = (primaryIdx + 2) % opciones.length;
+
+    return [opciones[primaryIdx], opciones[secondaryIdx], opciones[tertiaryIdx]];
+  }
 }

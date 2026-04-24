@@ -2,8 +2,10 @@ import 'package:hive/hive.dart';
 
 part 'evaluation_result.g.dart';
 
+const int kMaxAttempts = 3;
+
 // ──────────────────────────────────────────────
-// Respuesta individual
+// Respuesta individual  (typeId: 0)
 // ──────────────────────────────────────────────
 @HiveType(typeId: 0)
 class AnswerRecord extends HiveObject {
@@ -28,105 +30,113 @@ class AnswerRecord extends HiveObject {
 }
 
 // ──────────────────────────────────────────────
-// Resultado de un área completa
+// Un intento completo de un área  (typeId: 1)
 // ──────────────────────────────────────────────
 @HiveType(typeId: 1)
-class AreaResult extends HiveObject {
+class AreaAttempt extends HiveObject {
   @HiveField(0)
-  final String area;
+  final int attemptNumber;
 
   @HiveField(1)
-  final List<AnswerRecord> answers;
+  final DateTime date;
 
   @HiveField(2)
-  final int totalScore;
+  final String area;
 
   @HiveField(3)
-  final int maxPossibleScore;
+  final List<AnswerRecord> answers;
 
   @HiveField(4)
-  final bool completed;
+  final int totalScore;
 
-  AreaResult({
+  @HiveField(5)
+  final int maxPossibleScore;
+
+  /// Afinidad con mayor puntaje
+  @HiveField(6)
+  final String afinidadPrimaria;
+
+  /// Segunda afinidad más alta
+  @HiveField(7)
+  final String afinidadSecundaria;
+
+  /// Tercera afinidad más alta
+  @HiveField(8)
+  final String afinidadTerciaria;
+
+  AreaAttempt({
+    required this.attemptNumber,
+    required this.date,
     required this.area,
     required this.answers,
     required this.totalScore,
     required this.maxPossibleScore,
-    required this.completed,
+    required this.afinidadPrimaria,
+    required this.afinidadSecundaria,
+    required this.afinidadTerciaria,
   });
 
   double get percentage =>
       maxPossibleScore == 0 ? 0 : (totalScore / maxPossibleScore) * 100;
+
+  String get scoreLabel {
+    final p = percentage;
+    if (p >= 80) return 'Afinidad muy alta';
+    if (p >= 60) return 'Afinidad alta';
+    if (p >= 40) return 'Afinidad media';
+    return 'Afinidad baja';
+  }
 }
 
 // ──────────────────────────────────────────────
-// Resultado completo de una evaluación
+// Contenedor por perfil+área  (typeId: 2)
+// Guarda hasta kMaxAttempts intentos + borrador en curso
 // ──────────────────────────────────────────────
 @HiveType(typeId: 2)
-class EvaluationResult extends HiveObject {
+class AreaProgress extends HiveObject {
   @HiveField(0)
-  final String id;
-
-  @HiveField(1)
   final String profileId;
 
-  @HiveField(2)
+  @HiveField(1)
   final String area;
 
+  @HiveField(2)
+  final List<AreaAttempt> attempts;
+
   @HiveField(3)
-  final DateTime date;
+  final List<AnswerRecord> draftAnswers;
 
   @HiveField(4)
-  final List<AnswerRecord> answers;
+  final int draftLastIndex;
 
-  @HiveField(5)
-  final int totalScore;
+  int? totalQuestions;
 
-  @HiveField(6)
-  final int maxPossibleScore;
-
-  @HiveField(7)
-  final bool completed;
-
-  // Respuestas guardadas hasta el momento (progreso parcial)
-  @HiveField(8)
-  final int lastAnsweredIndex;
-
-  EvaluationResult({
-    required this.id,
+  AreaProgress({
     required this.profileId,
     required this.area,
-    required this.date,
-    required this.answers,
-    required this.totalScore,
-    required this.maxPossibleScore,
-    required this.completed,
-    required this.lastAnsweredIndex,
+    required this.attempts,
+    required this.draftAnswers,
+    required this.draftLastIndex,
   });
 
-  double get percentage =>
-      maxPossibleScore == 0 ? 0 : (totalScore / maxPossibleScore) * 100;
+  bool get hasCompletedAttempts => attempts.isNotEmpty;
+  bool get canStartNewAttempt => attempts.length < kMaxAttempts;
+  int get attemptsLeft => kMaxAttempts - attempts.length;
+  bool get hasDraft => draftAnswers.isNotEmpty;
+  AreaAttempt? get latestAttempt =>
+      attempts.isEmpty ? null : attempts.last;
 
-  double get progressPercent => completed ? 1.0 : 0.0;
-
-  // Copia con cambios
-  EvaluationResult copyWith({
-    List<AnswerRecord>? answers,
-    int? totalScore,
-    int? maxPossibleScore,
-    bool? completed,
-    int? lastAnsweredIndex,
+  AreaProgress copyWith({
+    List<AreaAttempt>? attempts,
+    List<AnswerRecord>? draftAnswers,
+    int? draftLastIndex,
   }) {
-    return EvaluationResult(
-      id: id,
+    return AreaProgress(
       profileId: profileId,
       area: area,
-      date: date,
-      answers: answers ?? this.answers,
-      totalScore: totalScore ?? this.totalScore,
-      maxPossibleScore: maxPossibleScore ?? this.maxPossibleScore,
-      completed: completed ?? this.completed,
-      lastAnsweredIndex: lastAnsweredIndex ?? this.lastAnsweredIndex,
+      attempts: attempts ?? this.attempts,
+      draftAnswers: draftAnswers ?? this.draftAnswers,
+      draftLastIndex: draftLastIndex ?? this.draftLastIndex,
     );
   }
 }

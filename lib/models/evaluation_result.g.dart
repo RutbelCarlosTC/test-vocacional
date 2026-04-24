@@ -1,11 +1,9 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'evaluation_result.dart';
 
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
-
+// ──────────────────────────────────────────────
+// AnswerRecord  typeId: 0
+// ──────────────────────────────────────────────
 class AnswerRecordAdapter extends TypeAdapter<AnswerRecord> {
   @override
   final int typeId = 0;
@@ -49,39 +47,54 @@ class AnswerRecordAdapter extends TypeAdapter<AnswerRecord> {
           typeId == other.typeId;
 }
 
-class AreaResultAdapter extends TypeAdapter<AreaResult> {
+// ──────────────────────────────────────────────
+// AreaAttempt  typeId: 1
+// ──────────────────────────────────────────────
+class AreaAttemptAdapter extends TypeAdapter<AreaAttempt> {
   @override
   final int typeId = 1;
 
   @override
-  AreaResult read(BinaryReader reader) {
+  AreaAttempt read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return AreaResult(
-      area: fields[0] as String,
-      answers: (fields[1] as List).cast<AnswerRecord>(),
-      totalScore: fields[2] as int,
-      maxPossibleScore: fields[3] as int,
-      completed: fields[4] as bool,
+    return AreaAttempt(
+      attemptNumber: fields[0] as int,
+      date: fields[1] as DateTime,
+      area: fields[2] as String,
+      answers: (fields[3] as List).cast<AnswerRecord>(),
+      totalScore: fields[4] as int,
+      maxPossibleScore: fields[5] as int,
+      afinidadPrimaria: fields[6] as String,
+      afinidadSecundaria: fields[7] as String,
+      afinidadTerciaria: fields[8] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, AreaResult obj) {
+  void write(BinaryWriter writer, AreaAttempt obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(9)
       ..writeByte(0)
-      ..write(obj.area)
+      ..write(obj.attemptNumber)
       ..writeByte(1)
-      ..write(obj.answers)
+      ..write(obj.date)
       ..writeByte(2)
-      ..write(obj.totalScore)
+      ..write(obj.area)
       ..writeByte(3)
-      ..write(obj.maxPossibleScore)
+      ..write(obj.answers)
       ..writeByte(4)
-      ..write(obj.completed);
+      ..write(obj.totalScore)
+      ..writeByte(5)
+      ..write(obj.maxPossibleScore)
+      ..writeByte(6)
+      ..write(obj.afinidadPrimaria)
+      ..writeByte(7)
+      ..write(obj.afinidadSecundaria)
+      ..writeByte(8)
+      ..write(obj.afinidadTerciaria);
   }
 
   @override
@@ -90,56 +103,47 @@ class AreaResultAdapter extends TypeAdapter<AreaResult> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AreaResultAdapter &&
+      other is AreaAttemptAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class EvaluationResultAdapter extends TypeAdapter<EvaluationResult> {
+// ──────────────────────────────────────────────
+// AreaProgress  typeId: 2
+// ──────────────────────────────────────────────
+class AreaProgressAdapter extends TypeAdapter<AreaProgress> {
   @override
   final int typeId = 2;
 
   @override
-  EvaluationResult read(BinaryReader reader) {
+  AreaProgress read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return EvaluationResult(
-      id: fields[0] as String,
-      profileId: fields[1] as String,
-      area: fields[2] as String,
-      date: fields[3] as DateTime,
-      answers: (fields[4] as List).cast<AnswerRecord>(),
-      totalScore: fields[5] as int,
-      maxPossibleScore: fields[6] as int,
-      completed: fields[7] as bool,
-      lastAnsweredIndex: fields[8] as int,
+    return AreaProgress(
+      profileId: fields[0] as String,
+      area: fields[1] as String,
+      attempts: (fields[2] as List).cast<AreaAttempt>(),
+      draftAnswers: (fields[3] as List).cast<AnswerRecord>(),
+      draftLastIndex: fields[4] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, EvaluationResult obj) {
+  void write(BinaryWriter writer, AreaProgress obj) {
     writer
-      ..writeByte(9)
-      ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
-      ..write(obj.profileId)
-      ..writeByte(2)
-      ..write(obj.area)
-      ..writeByte(3)
-      ..write(obj.date)
-      ..writeByte(4)
-      ..write(obj.answers)
       ..writeByte(5)
-      ..write(obj.totalScore)
-      ..writeByte(6)
-      ..write(obj.maxPossibleScore)
-      ..writeByte(7)
-      ..write(obj.completed)
-      ..writeByte(8)
-      ..write(obj.lastAnsweredIndex);
+      ..writeByte(0)
+      ..write(obj.profileId)
+      ..writeByte(1)
+      ..write(obj.area)
+      ..writeByte(2)
+      ..write(obj.attempts)
+      ..writeByte(3)
+      ..write(obj.draftAnswers)
+      ..writeByte(4)
+      ..write(obj.draftLastIndex);
   }
 
   @override
@@ -148,7 +152,7 @@ class EvaluationResultAdapter extends TypeAdapter<EvaluationResult> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is EvaluationResultAdapter &&
+      other is AreaProgressAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

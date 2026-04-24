@@ -3,6 +3,7 @@ import '../models/user_profile.dart';
 import '../services/profile_manager.dart';
 import 'profile_selection_screen.dart';
 import 'area_selection_screen.dart';
+import 'global_results_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -99,8 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
               subtitle: 'Revisa tus evaluaciones anteriores.',
               onTap: () {
                 // TODO: navegar a ResultsScreen
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Próximamente: Consultar resultados')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const GlobalResultsScreen()),
                 );
               },
             ),

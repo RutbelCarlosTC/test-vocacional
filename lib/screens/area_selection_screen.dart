@@ -4,6 +4,7 @@ import '../models/evaluation_result.dart';
 import '../services/evaluation_service.dart';
 import '../services/profile_manager.dart';
 import 'quiz_screen.dart';
+import 'result_screen.dart';
 
 class AreaSelectionScreen extends StatefulWidget {
   const AreaSelectionScreen({super.key});
@@ -19,8 +20,9 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
   String? _profileId;
   bool _loading = true;
 
-  // Estado de cada área
-  final Map<EvaluationArea, _AreaStatus> _statusMap = {};
+  // Progress de cada área
+  final Map<EvaluationArea, AreaProgress> _progressMap = {};
+  final Map<EvaluationArea, int> _totalsMap = {};
 
   @override
   void initState() {
@@ -32,96 +34,77 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
     final profile = await _profileManager.getActiveProfile();
     if (profile == null) return;
 
-    final Map<EvaluationArea, _AreaStatus> map = {};
-    for (final area in EvaluationArea.values) {
-      final result = _evalService.getResult(profile.id, area);
-      map[area] = _AreaStatus(
-        completed: result?.completed ?? false,
-        answeredCount: result?.lastAnsweredIndex ?? 0,
-        totalQuestions: 0, // se calcula tras cargar
-      );
-    }
+    // Cargamos todas las preguntas (el servicio las cachea, así que es rápido)
+    final allQuestions = await _evalService.loadAllQuestions();
 
-    // Carga preguntas para saber el total de cada área
+    final Map<EvaluationArea, AreaProgress> map = {};
+    final Map<EvaluationArea, int> totals = {};
+
     for (final area in EvaluationArea.values) {
-      final questions = await _evalService.loadQuestionsForArea(area);
-      map[area] = _AreaStatus(
-        completed: map[area]!.completed,
-        answeredCount: map[area]!.answeredCount,
-        totalQuestions: questions.length,
-      );
+      map[area] = _evalService.getProgress(profile.id, area);
+      // Contamos cuántas preguntas pertenecen a esta área
+      totals[area] = allQuestions.where((q) => q.area == area.jsonKey).length;
     }
 
     setState(() {
       _profileId = profile.id;
-      _statusMap.addAll(map);
+      _progressMap.addAll(map);
+      _totalsMap.addAll(totals); // Guardamos los totales
       _loading = false;
     });
   }
 
-  Future<void> _openArea(EvaluationArea area) async {
+  Future<void> _startQuiz(EvaluationArea area) async {
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => QuizScreen(area: area, profileId: _profileId!),
       ),
     );
-    // Recargar estado al volver
     setState(() => _loading = true);
     _loadStatus();
+  }
+
+  void _viewResults(EvaluationArea area) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultScreen(area: area, profileId: _profileId!),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Elegir área de evaluación'),
-      ),
+      appBar: AppBar(title: const Text('Áreas de evaluación')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : Padding(
+          : ListView(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Selecciona el área que deseas evaluar:',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 20),
-                  ...EvaluationArea.values.map(
-                    (area) => Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
-                      child: _AreaCard(
-                        area: area,
-                        status: _statusMap[area]!,
-                        onTap: () => _openArea(area),
-                      ),
+              children: [
+                const Text(
+                  'Selecciona el área que deseas evaluar:',
+                  style: TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 16),
+                ...EvaluationArea.values.map(
+                  (area) => Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: _AreaCard(
+                      area: area,
+                      progress: _progressMap[area]!,
+                      totalQuestions:
+                          _totalsMap[area] ?? 1, // Pasamos el total aquí
+                      onStartQuiz: () => _startQuiz(area),
+                      onViewResults: () => _viewResults(area),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
     );
   }
-}
-
-// ──────────────────────────────────────────────
-// Estado de un área
-// ──────────────────────────────────────────────
-class _AreaStatus {
-  final bool completed;
-  final int answeredCount;
-  final int totalQuestions;
-
-  _AreaStatus({
-    required this.completed,
-    required this.answeredCount,
-    required this.totalQuestions,
-  });
-
-  double get progress =>
-      totalQuestions == 0 ? 0 : answeredCount / totalQuestions;
 }
 
 // ──────────────────────────────────────────────
@@ -129,103 +112,211 @@ class _AreaStatus {
 // ──────────────────────────────────────────────
 class _AreaCard extends StatelessWidget {
   final EvaluationArea area;
-  final _AreaStatus status;
-  final VoidCallback onTap;
+  final AreaProgress progress;
+  final int totalQuestions;
+  final VoidCallback onStartQuiz;
+  final VoidCallback onViewResults;
 
   const _AreaCard({
     required this.area,
-    required this.status,
-    required this.onTap,
+    required this.progress,
+    required this.totalQuestions,
+    required this.onStartQuiz,
+    required this.onViewResults,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
-    final completed = status.completed;
+    final hasAttempts = progress.hasCompletedAttempts;
+    final canStart = progress.canStartNewAttempt;
+    final attemptsLeft = progress.attemptsLeft;
+    final totalAttempts = progress.attempts.length;
 
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      area.label,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Título + badge de intentos
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    area.label,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (completed)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        'Finalizado',
-                        style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    )
-                  else if (status.answeredCount > 0)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        'En progreso',
-                        style: TextStyle(
-                            color: Colors.orange,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Text(
-                area.description,
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-              ),
-              const SizedBox(height: 12),
-              // Barra de progreso
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: completed ? 1.0 : status.progress,
-                  minHeight: 8,
-                  backgroundColor: Colors.grey.shade200,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      completed ? Colors.green : color),
                 ),
-              ),
-              const SizedBox(height: 6),
+                _AttemptsBadge(
+                  totalAttempts: totalAttempts,
+                  attemptsLeft: attemptsLeft,
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              area.description,
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
+            ),
+
+            // Último resultado (si existe)
+            if (hasAttempts) ...[
+              const SizedBox(height: 10),
+              const Divider(height: 1),
+              const SizedBox(height: 10),
               Text(
-                completed
-                    ? '100% completado'
-                    : status.answeredCount == 0
-                        ? '${status.totalQuestions} preguntas'
-                        : '${status.answeredCount} / ${status.totalQuestions} preguntas',
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                'Último intento: ${progress.latestAttempt!.scoreLabel} '
+                '(${progress.latestAttempt!.percentage.toStringAsFixed(0)}%)',
+                style: const TextStyle(fontSize: 13),
               ),
             ],
-          ),
+
+            // Borrador en curso
+            if (progress.hasDraft) ...[
+              const SizedBox(height: 12),
+              Builder(
+                builder: (context) {
+                  // Usamos directamente el totalQuestions que pasamos al widget _AreaCard
+                  final int answeredQuestions = progress.draftLastIndex;
+
+                  // Calculamos el progreso (evitando división por cero)
+                  final double progressValue = totalQuestions > 0
+                      ? (answeredQuestions / totalQuestions).clamp(0.0, 1.0)
+                      : 0.0;
+                  final int progressPercent = (progressValue * 100).toInt();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'En progreso (pregunta ${answeredQuestions + 1})',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.orange.shade800,
+                            ),
+                          ),
+                          Text(
+                            '$progressPercent%',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange.shade800,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: progressValue,
+                          minHeight: 6,
+                          backgroundColor: Colors.orange.shade100,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.orange.shade500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+
+            const SizedBox(height: 14),
+
+            // Botones
+            Row(
+              children: [
+                if (hasAttempts)
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onViewResults,
+                      icon: const Icon(Icons.bar_chart, size: 18),
+                      label: const Text('Ver resultados'),
+                    ),
+                  ),
+                if (hasAttempts && canStart) const SizedBox(width: 10),
+                if (canStart)
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: onStartQuiz,
+                      icon: Icon(
+                        progress.hasDraft
+                            ? Icons.play_arrow
+                            : Icons.assignment_outlined,
+                        size: 18,
+                      ),
+                      label: Text(
+                        progress.hasDraft
+                            ? 'Continuar'
+                            : hasAttempts
+                            ? 'Nuevo intento'
+                            : 'Iniciar',
+                      ),
+                    ),
+                  ),
+                if (!canStart && !hasAttempts)
+                  const Text(
+                    'Sin intentos disponibles',
+                    style: TextStyle(color: Colors.grey, fontSize: 13),
+                  ),
+              ],
+            ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────
+// Badge de intentos
+// ──────────────────────────────────────────────
+class _AttemptsBadge extends StatelessWidget {
+  final int totalAttempts;
+  final int attemptsLeft;
+
+  const _AttemptsBadge({
+    required this.totalAttempts,
+    required this.attemptsLeft,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Color bgColor;
+    String label;
+
+    if (attemptsLeft == 0) {
+      bgColor = Colors.red.shade100;
+      label = 'Sin intentos';
+    } else if (totalAttempts == 0) {
+      bgColor = Colors.blue.shade100;
+      label = '$attemptsLeft intentos disponibles';
+    } else {
+      bgColor = Colors.orange.shade100;
+      label =
+          '$attemptsLeft ${attemptsLeft == 1 ? 'intento' : 'intentos'} restantes';
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
       ),
     );
   }

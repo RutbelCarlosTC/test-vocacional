@@ -26,9 +26,8 @@ class _QuizScreenState extends State<QuizScreen>
   final List<AnswerRecord> _answers = [];
   int _currentIndex = 0;
   bool _loading = true;
-  OptionModel? _selectedOption; // Rastrea la opción seleccionada actualmente
+  OptionModel? _selectedOption;
 
-  // Animación de transición entre preguntas
   late AnimationController _animController;
   late Animation<Offset> _slideIn;
   late Animation<double> _fadeIn;
@@ -58,12 +57,12 @@ class _QuizScreenState extends State<QuizScreen>
   Future<void> _loadQuestions() async {
     final questions = await _evalService.loadQuestionsForArea(widget.area);
 
-    // Recuperar progreso previo si existe
-    final existing = _evalService.getResult(widget.profileId, widget.area);
+    // Recuperar borrador si existe
+    final progress = _evalService.getProgress(widget.profileId, widget.area);
     int startIndex = 0;
-    if (existing != null && !existing.completed) {
-      _answers.addAll(existing.answers);
-      startIndex = existing.lastAnsweredIndex;
+    if (progress.hasDraft) {
+      _answers.addAll(progress.draftAnswers);
+      startIndex = progress.draftLastIndex;
       if (startIndex >= questions.length) startIndex = questions.length - 1;
     }
 
@@ -75,20 +74,14 @@ class _QuizScreenState extends State<QuizScreen>
     _animController.forward(from: 0);
   }
 
-  // Ahora solo actualiza el estado local de la selección
   void _selectAnswer(OptionModel option) {
-    setState(() {
-      _selectedOption = option;
-    });
+    setState(() => _selectedOption = option);
   }
 
-  // Nueva función que maneja el guardado y el avance
   Future<void> _handleNext() async {
     if (_selectedOption == null) return;
 
     final question = _questions[_currentIndex];
-
-    // Reemplazar si ya existe respuesta para esta pregunta
     final existingIdx =
         _answers.indexWhere((a) => a.questionId == question.id);
     final answer = AnswerRecord(
@@ -105,76 +98,58 @@ class _QuizScreenState extends State<QuizScreen>
     }
 
     final isLast = _currentIndex == _questions.length - 1;
-    final totalScore = _answers.fold(0, (sum, a) => sum + a.value);
-    final maxScore = _questions.fold(
-        0,
-        (sum, q) => sum +
-            (q.options.map((o) => o.value).reduce((a, b) => a > b ? a : b)));
 
     if (isLast) {
-      // Guardar como completado
-      await _evalService.saveProgress(
+      // Finalizar intento y guardar
+      final attempt = await _evalService.finalizeAttempt(
         profileId: widget.profileId,
         area: widget.area,
         answers: List.from(_answers),
-        totalScore: totalScore,
-        maxPossibleScore: maxScore,
-        completed: true,
-        lastAnsweredIndex: _questions.length,
+        questions: _questions,
       );
 
       if (!mounted) return;
+
+      if (attempt == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo guardar el intento.')),
+        );
+        return;
+      }
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (_) => ResultScreen(
             area: widget.area,
             profileId: widget.profileId,
+            latestAttempt: attempt,
           ),
         ),
       );
     } else {
-      // Guardar progreso parcial
-      await _evalService.saveProgress(
+      // Guardar borrador
+      await _evalService.saveDraft(
         profileId: widget.profileId,
         area: widget.area,
         answers: List.from(_answers),
-        totalScore: totalScore,
-        maxPossibleScore: maxScore,
-        completed: false,
-        lastAnsweredIndex: _currentIndex + 1,
+        lastIndex: _currentIndex + 1,
       );
 
-      // Siguiente pregunta con animación y reset de selección
       setState(() {
         _currentIndex++;
-        _selectedOption = null; // Reinicia la selección
+        _selectedOption = null;
       });
       _animController.forward(from: 0);
     }
   }
 
   Future<bool> _onWillPop() async {
-    // Guardar progreso al salir
-    final totalScore = _answers.fold(0, (sum, a) => sum + a.value);
-    final maxScore = _questions.isEmpty
-        ? 0
-        : _questions.fold(
-            0,
-            (sum, q) =>
-                sum +
-                (q.options
-                    .map((o) => o.value)
-                    .reduce((a, b) => a > b ? a : b)));
-
-    await _evalService.saveProgress(
+    await _evalService.saveDraft(
       profileId: widget.profileId,
       area: widget.area,
       answers: List.from(_answers),
-      totalScore: totalScore,
-      maxPossibleScore: maxScore,
-      completed: false,
-      lastAnsweredIndex: _currentIndex,
+      lastIndex: _currentIndex,
     );
     return true;
   }
@@ -198,23 +173,18 @@ class _QuizScreenState extends State<QuizScreen>
         ),
         body: Column(
           children: [
-            // ── Barra de progreso ──
             _ProgressHeader(
               progress: progress,
               current: _currentIndex + 1,
               total: _questions.length,
               percent: progressPercent,
             ),
-
-            // ── Pregunta con animación ──
             Expanded(
               child: FadeTransition(
                 opacity: _fadeIn,
                 child: SlideTransition(
                   position: _slideIn,
                   child: _QuestionCard(
-                    // El ValueKey asegura que el widget se reconstruya y limpie
-                    // su estado interno de UI al cambiar de pregunta
                     key: ValueKey(_currentIndex),
                     question: question,
                     questionNumber: _currentIndex + 1,
@@ -225,12 +195,10 @@ class _QuizScreenState extends State<QuizScreen>
             ),
           ],
         ),
-        // ── Botón de navegación ──
         bottomNavigationBar: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
-              // Si no hay opción seleccionada, el botón se deshabilita
               onPressed: _selectedOption == null ? null : _handleNext,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
@@ -277,10 +245,8 @@ class _ProgressHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Pregunta $current de $total',
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-              ),
+              Text('Pregunta $current de $total',
+                  style: const TextStyle(fontSize: 13, color: Colors.grey)),
               Text(
                 '$percent%',
                 style: TextStyle(
@@ -341,7 +307,6 @@ class _QuestionCardState extends State<_QuestionCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 8),
-          // Texto de la pregunta
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -360,7 +325,6 @@ class _QuestionCardState extends State<_QuestionCard> {
             style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
           const SizedBox(height: 12),
-          // Opciones
           ...widget.question.options.asMap().entries.map((entry) {
             final idx = entry.key;
             final option = entry.value;
@@ -373,8 +337,6 @@ class _QuestionCardState extends State<_QuestionCard> {
                 isSelected: isSelected,
                 onTap: () {
                   setState(() => _selectedIndex = idx);
-                  // Eliminado el Future.delayed para que la selección se registre 
-                  // al instante y el botón "Siguiente" se habilite de inmediato.
                   widget.onAnswer(option);
                 },
               ),
