@@ -34,22 +34,20 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
     final profile = await _profileManager.getActiveProfile();
     if (profile == null) return;
 
-    // Cargamos todas las preguntas (el servicio las cachea, así que es rápido)
-    final allQuestions = await _evalService.loadAllQuestions();
-
     final Map<EvaluationArea, AreaProgress> map = {};
     final Map<EvaluationArea, int> totals = {};
 
     for (final area in EvaluationArea.values) {
       map[area] = _evalService.getProgress(profile.id, area);
-      // Contamos cuántas preguntas pertenecen a esta área
-      totals[area] = allQuestions.where((q) => q.area == area.jsonKey).length;
+      // Cargamos las preguntas de esta área específica para obtener el total
+      final questions = await _evalService.loadQuestionsForArea(area);
+      totals[area] = questions.length;
     }
 
     setState(() {
       _profileId = profile.id;
       _progressMap.addAll(map);
-      _totalsMap.addAll(totals); // Guardamos los totales
+      _totalsMap.addAll(totals);
       _loading = false;
     });
   }

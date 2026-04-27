@@ -168,21 +168,98 @@ class _AttemptCardState extends State<_AttemptCard> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Afinidades
-                  const Text(
-                    'Afinidades',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                  const SizedBox(height: 8),
-                  _AfinidadRow(
-                      rank: '1°', label: attempt.afinidadPrimaria, color: Colors.green),
-                  const SizedBox(height: 4),
-                  _AfinidadRow(
-                      rank: '2°', label: attempt.afinidadSecundaria, color: Colors.blue),
-                  const SizedBox(height: 4),
-                  _AfinidadRow(
-                      rank: '3°', label: attempt.afinidadTerciaria, color: Colors.orange),
+                  // Si la prueba no es válida (Protocolo del Ítem 16)
+                  if (!attempt.isValid) ...[
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red.shade200),
+                      ),
+                      child: Column(
+                        children: [
+                          const Icon(Icons.warning_amber_rounded,
+                              color: Colors.red, size: 48),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'PRUEBA INVALIDADA',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.red,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Se detectaron respuestas inconsistentes o al azar (Ítem de control no superado). '
+                            'Los resultados no pueden ser interpretados de manera confiable. '
+                            'Te recomendamos realizar el test nuevamente con sinceridad.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 13, height: 1.4),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ] else if (attempt.hasDimensions) ...[
+                    // Resultados por Dimensión (si es válido)
+                    const Text(
+                      'Resultados por Dimensión',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    const SizedBox(height: 8),
+                    ...attempt.dimensionScores.map((ds) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(ds.label,
+                                      style: const TextStyle(fontSize: 13)),
+                                  Text(ds.level,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: _getLevelColor(ds.level))),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              LinearProgressIndicator(
+                                value: ds.percentage / 100,
+                                minHeight: 4,
+                                backgroundColor: Colors.grey.shade200,
+                                color: _getLevelColor(ds.level),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ] else ...[
+                    // Afinidades
+                    const Text(
+                      'Afinidades',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    const SizedBox(height: 8),
+                    _AfinidadRow(
+                        rank: '1°',
+                        label: attempt.afinidadPrimaria ?? 'Sin asignar',
+                        color: Colors.green),
+                    const SizedBox(height: 4),
+                    _AfinidadRow(
+                        rank: '2°',
+                        label: attempt.afinidadSecundaria ?? 'Sin asignar',
+                        color: Colors.blue),
+                    const SizedBox(height: 4),
+                    _AfinidadRow(
+                        rank: '3°',
+                        label: attempt.afinidadTerciaria ?? 'Sin asignar',
+                        color: Colors.orange),
+                  ],
 
                   const SizedBox(height: 16),
 
@@ -235,6 +312,19 @@ class _AttemptCardState extends State<_AttemptCard> {
         ],
       ),
     );
+  }
+
+  Color _getLevelColor(String level) {
+    switch (level.toLowerCase()) {
+      case 'bajo':
+        return Colors.red;
+      case 'medio':
+        return Colors.orange;
+      case 'alto':
+        return Colors.green;
+      default:
+        return Colors.blue;
+    }
   }
 }
 

@@ -1,0 +1,210 @@
+[
+  {
+    "id": 1,
+    "area": "Hábitos de Estudio",
+    "dimension": "Disciplina Académica",
+    "question": "Cuando empiezo una tarea, trabajo sin detenerme hasta terminarla bien.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 2,
+    "area": "Hábitos de Estudio",
+    "dimension": "Disciplina Académica",
+    "question": "Mantengo mis horarios, apuntes y materiales de estudio perfectamente organizados.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 3,
+    "area": "Hábitos de Estudio",
+    "dimension": "Disciplina Académica",
+    "question": "Suelo entregar mis trabajos antes de la fecha límite para evitar contratiempos a última hora.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 4,
+    "area": "Características de la Personalidad",
+    "dimension": "Resiliencia y Manejo del Estrés",
+    "question": "Mantengo la calma y la concentración incluso cuando tengo varios exámenes en la misma semana.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 5,
+    "area": "Características de la Personalidad",
+    "dimension": "Resiliencia y Manejo del Estrés",
+    "question": "Cuando obtengo una mala calificación, me esfuerzo más hasta mejorar mi resultado.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 6,
+    "area": "Características de la Personalidad",
+    "dimension": "Resiliencia y Manejo del Estrés",
+    "question": "Logro controlar mis nervios antes de una exposición o examen oral importante.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 7,
+    "area": "Características de la Personalidad",
+    "dimension": "Curiosidad Intelectual",
+    "question": "Por iniciativa propia, busco información sobre temas nuevos más allá de lo que enseñan en clase.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 8,
+    "area": "Características de la Personalidad",
+    "dimension": "Curiosidad Intelectual",
+    "question": "Prefiero resolver problemas utilizando estrategias creativas u originales.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 9,
+    "area": "Características de la Personalidad",
+    "dimension": "Curiosidad Intelectual",
+    "question": "Me gusta analizar el 'por qué' de las cosas más que solo memorizar datos.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 10,
+    "area": "Características de la Personalidad",
+    "dimension": "Liderazgo y Sociabilidad",
+    "question": "Me siento seguro y cómodo expresando mis opiniones frente a un grupo de personas.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 11,
+    "area": "Características de la Personalidad",
+    "dimension": "Liderazgo y Sociabilidad",
+    "question": "Tengo facilidad para liderar equipos y organizar actividades grupales.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 12,
+    "area": "Características de la Personalidad",
+    "dimension": "Liderazgo y Sociabilidad",
+    "question": "Elijo hacer actividades en grupo antes que trabajar por mi cuenta.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 13,
+    "area": "Características de la Personalidad",
+    "dimension": "Aprendizaje Colaborativo",
+    "question": "Me interesa ayudar a mis compañeros cuando tienen dificultades, ya sean personales o de estudio.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 14,
+    "area": "Características de la Personalidad",
+    "dimension": "Aprendizaje Colaborativo",
+    "question": "Creo que es más importante cooperar para que el equipo gane, que competir por ser el mejor.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 15,
+    "area": "Características de la Personalidad",
+    "dimension": "Aprendizaje Colaborativo",
+    "question": "Tengo paciencia para escuchar y explicar a quienes me piden ayuda cuando no entienden.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  },
+  {
+    "id": 16,
+    "area": "Control",
+    "dimension": "Control de Validez",
+    "question": "Si estás leyendo esta frase con atención, marca la opción “En desacuerdo”.",
+    "options": [
+      {"text": "Totalmente en desacuerdo", "value": 1},
+      {"text": "En desacuerdo", "value": 2},
+      {"text": "Ni de acuerdo ni en desacuerdo", "value": 3},
+      {"text": "De acuerdo", "value": 4},
+      {"text": "Totalmente de acuerdo", "value": 5}
+    ]
+  }
+]

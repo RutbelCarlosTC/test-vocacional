@@ -1,0 +1,28 @@
+[
+  {
+    "id": 101,
+    "area": "Preferencias Profesionales",
+    "dimension": "Científico-Tecnológica",
+    "question": "¿Qué tanto te interesaría diseñar y programar una aplicación móvil?",
+    "options": [
+      {"text": "Nada", "value": 1},
+      {"text": "Poco", "value": 2},
+      {"text": "Regular", "value": 3},
+      {"text": "Mucho", "value": 4},
+      {"text": "Me encanta", "value": 5}
+    ]
+  },
+  {
+    "id": 102,
+    "area": "Preferencias Profesionales",
+    "dimension": "Administrativa",
+    "question": "¿Te gustaría organizar y dirigir los recursos de una empresa?",
+    "options": [
+      {"text": "Nada", "value": 1},
+      {"text": "Poco", "value": 2},
+      {"text": "Regular", "value": 3},
+      {"text": "Mucho", "value": 4},
+      {"text": "Me encanta", "value": 5}
+    ]
+  }
+]

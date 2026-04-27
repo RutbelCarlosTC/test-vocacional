@@ -5,21 +5,22 @@ import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
 
 class EvaluationService {
-  static const String _boxName = 'area_progress_v3';
+  static const String _boxName = 'area_progress_v4'; // Cambiado a v4 para evitar errores de casteo con datos viejos
 
   static final EvaluationService _instance = EvaluationService._internal();
   factory EvaluationService() => _instance;
   EvaluationService._internal();
 
-  List<QuestionModel>? _allQuestions;
-
   // ── Inicialización ──────────────────────────────────────
 
   static Future<void> init() async {
     await Hive.initFlutter();
+    // Registrar todos los adaptadores
     Hive.registerAdapter(AnswerRecordAdapter());
+    Hive.registerAdapter(DimensionScoreAdapter()); // Falta este adaptador
     Hive.registerAdapter(AreaAttemptAdapter());
     Hive.registerAdapter(AreaProgressAdapter());
+
     await Hive.openBox<AreaProgress>(_boxName);
   }
 
@@ -27,19 +28,17 @@ class EvaluationService {
 
   // ── Carga de preguntas ──────────────────────────────────
 
-  Future<List<QuestionModel>> loadAllQuestions() async {
-    if (_allQuestions != null) return _allQuestions!;
-    final raw = await rootBundle.loadString('assets/questions.json');
-    final list = jsonDecode(raw) as List;
-    _allQuestions = list
-        .map((e) => QuestionModel.fromMap(e as Map<String, dynamic>))
-        .toList();
-    return _allQuestions!;
-  }
-
   Future<List<QuestionModel>> loadQuestionsForArea(EvaluationArea area) async {
-    final all = await loadAllQuestions();
-    return all.where((q) => q.area == area.jsonKey).toList();
+    try {
+      final raw = await rootBundle.loadString(area.assetPath);
+      final list = jsonDecode(raw) as List;
+      return list
+          .map((e) => QuestionModel.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error cargando JSON para ${area.name}: $e');
+      return [];
+    }
   }
 
   // ── Acceso a AreaProgress ────────────────────────────────
@@ -85,10 +84,42 @@ class EvaluationService {
     final progress = getProgress(profileId, area);
     if (!progress.canStartNewAttempt) return null;
 
+    final scoringType = area.scoringType;
+    bool isValid = true;
+
+    // --- PROTOCOLO DE VALIDACIÓN (PERSONALIDAD) ---
+    if (area == EvaluationArea.personalidad) {
+      try {
+        // Buscamos la respuesta a la pregunta con ID 16
+        final item16 = answers.firstWhere((a) => a.questionId == 16);
+        // Según el protocolo: Válida si el valor es 2 (En desacuerdo)
+        if (item16.value != 2) {
+          isValid = false;
+        }
+      } catch (e) {
+        // Si no se encuentra el ítem 16 (ej. test incompleto), invalidamos por seguridad
+        isValid = false;
+      }
+    }
+
     final totalScore = answers.fold(0, (sum, a) => sum + a.value);
     final maxScore = _calcMaxScore(questions);
 
-    final afinidades = _calcAfinidades(area, totalScore, maxScore);
+    List<DimensionScore> dimensionScores = [];
+    String? p1, p2, p3;
+
+    if (scoringType == 'dimensions') {
+      if (area == EvaluationArea.personalidad) {
+        dimensionScores = _calcDimensionScoresPersonalidad(answers, questions);
+      } else {
+        dimensionScores = _calcDimensionScores(answers, questions);
+      }
+    } else {
+      final afinidades = _calcAfinidades(area, totalScore, maxScore);
+      p1 = afinidades[0];
+      p2 = afinidades[1];
+      p3 = afinidades[2];
+    }
 
     final attempt = AreaAttempt(
       attemptNumber: progress.attempts.length + 1,
@@ -97,9 +128,12 @@ class EvaluationService {
       answers: List.from(answers),
       totalScore: totalScore,
       maxPossibleScore: maxScore,
-      afinidadPrimaria: afinidades[0],
-      afinidadSecundaria: afinidades[1],
-      afinidadTerciaria: afinidades[2],
+      afinidadPrimaria: p1,
+      afinidadSecundaria: p2,
+      afinidadTerciaria: p3,
+      dimensionScores: dimensionScores,
+      scoringType: scoringType,
+      isValid: isValid,
     );
 
     final updated = progress.copyWith(
@@ -109,6 +143,90 @@ class EvaluationService {
     );
     await _box.put(_key(profileId, area), updated);
     return attempt;
+  }
+
+  /// Cálculo específico para Personalidad: 5 dimensiones, 3 ítems cada una.
+  /// Rango 3-15 puntos.
+  List<DimensionScore> _calcDimensionScoresPersonalidad(
+      List<AnswerRecord> answers, List<QuestionModel> questions) {
+    final Map<String, int> scoresByDim = {};
+
+    // Solo procesamos ítems del 1 al 15 (las 5 dimensiones de 3 ítems cada una)
+    for (var q in questions) {
+      if (q.id > 15) continue; // Ignorar ítem de control 16 o adicionales
+
+      final dim = q.dimension ?? 'General';
+      final ans = answers.firstWhere(
+        (a) => a.questionId == q.id,
+        orElse: () => AnswerRecord(
+          questionId: q.id,
+          questionText: q.question,
+          selectedOption: 'N/A',
+          value: 0,
+        ),
+      );
+
+      scoresByDim[dim] = (scoresByDim[dim] ?? 0) + ans.value;
+    }
+
+    return scoresByDim.entries.map((e) {
+      final dimKey = e.key;
+      final score = e.value;
+      
+      // Baremos: 3-6 Bajo, 7-11 Medio, 12-15 Alto
+      String level = 'Medio';
+      if (score <= 6) level = 'Bajo';
+      if (score >= 12) level = 'Alto';
+
+      return DimensionScore(
+        key: dimKey.toLowerCase().replaceAll(' ', '_'),
+        label: dimKey,
+        score: score,
+        maxScore: 15, // Cada dimensión tiene 3 preguntas de máx 5 pts.
+        level: level,
+      );
+    }).toList();
+  }
+
+  List<DimensionScore> _calcDimensionScores(
+      List<AnswerRecord> answers, List<QuestionModel> questions) {
+    final Map<String, List<int>> scoresByDim = {};
+    final Map<String, List<int>> maxByDim = {};
+
+    for (var q in questions) {
+      final dim = q.dimension ?? 'General';
+      final ans = answers.firstWhere((a) => a.questionId == q.id,
+          orElse: () => AnswerRecord(
+              questionId: q.id,
+              questionText: q.question,
+              selectedOption: 'N/A',
+              value: 0));
+
+      final maxVal =
+          q.options.map((o) => o.value).reduce((a, b) => a > b ? a : b);
+
+      scoresByDim.putIfAbsent(dim, () => []).add(ans.value);
+      maxByDim.putIfAbsent(dim, () => []).add(maxVal);
+    }
+
+    return scoresByDim.entries.map((e) {
+      final dimKey = e.key;
+      final total = e.value.fold(0, (a, b) => a + b);
+      final max = maxByDim[dimKey]!.fold(0, (a, b) => a + b);
+      final pct = max == 0 ? 0 : total / max;
+
+      String level = 'Medio';
+      if (pct < 0.33) level = 'Bajo';
+      if (pct > 0.66) level = 'Alto';
+
+      return DimensionScore(
+        key: dimKey,
+        label: dimKey,
+        score: total,
+        maxScore: max,
+        level: level,
+      );
+    }).toList();
   }
 
   // ── Helpers ──────────────────────────────────────────────

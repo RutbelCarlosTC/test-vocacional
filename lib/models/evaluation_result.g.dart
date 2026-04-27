@@ -1,9 +1,11 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'evaluation_result.dart';
 
-// ──────────────────────────────────────────────
-// AnswerRecord  typeId: 0
-// ──────────────────────────────────────────────
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
 class AnswerRecordAdapter extends TypeAdapter<AnswerRecord> {
   @override
   final int typeId = 0;
@@ -47,9 +49,52 @@ class AnswerRecordAdapter extends TypeAdapter<AnswerRecord> {
           typeId == other.typeId;
 }
 
-// ──────────────────────────────────────────────
-// AreaAttempt  typeId: 1
-// ──────────────────────────────────────────────
+class DimensionScoreAdapter extends TypeAdapter<DimensionScore> {
+  @override
+  final int typeId = 3;
+
+  @override
+  DimensionScore read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return DimensionScore(
+      key: fields[0] as String,
+      label: fields[1] as String,
+      score: fields[2] as int,
+      maxScore: fields[3] as int,
+      level: fields[4] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, DimensionScore obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.key)
+      ..writeByte(1)
+      ..write(obj.label)
+      ..writeByte(2)
+      ..write(obj.score)
+      ..writeByte(3)
+      ..write(obj.maxScore)
+      ..writeByte(4)
+      ..write(obj.level);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DimensionScoreAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
 class AreaAttemptAdapter extends TypeAdapter<AreaAttempt> {
   @override
   final int typeId = 1;
@@ -67,16 +112,19 @@ class AreaAttemptAdapter extends TypeAdapter<AreaAttempt> {
       answers: (fields[3] as List).cast<AnswerRecord>(),
       totalScore: fields[4] as int,
       maxPossibleScore: fields[5] as int,
-      afinidadPrimaria: fields[6] as String,
-      afinidadSecundaria: fields[7] as String,
-      afinidadTerciaria: fields[8] as String,
+      afinidadPrimaria: fields[6] as String?,
+      afinidadSecundaria: fields[7] as String?,
+      afinidadTerciaria: fields[8] as String?,
+      dimensionScores: (fields[9] as List).cast<DimensionScore>(),
+      isValid: fields[10] as bool,
+      scoringType: fields[11] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, AreaAttempt obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.attemptNumber)
       ..writeByte(1)
@@ -94,7 +142,13 @@ class AreaAttemptAdapter extends TypeAdapter<AreaAttempt> {
       ..writeByte(7)
       ..write(obj.afinidadSecundaria)
       ..writeByte(8)
-      ..write(obj.afinidadTerciaria);
+      ..write(obj.afinidadTerciaria)
+      ..writeByte(9)
+      ..write(obj.dimensionScores)
+      ..writeByte(10)
+      ..write(obj.isValid)
+      ..writeByte(11)
+      ..write(obj.scoringType);
   }
 
   @override
@@ -108,9 +162,6 @@ class AreaAttemptAdapter extends TypeAdapter<AreaAttempt> {
           typeId == other.typeId;
 }
 
-// ──────────────────────────────────────────────
-// AreaProgress  typeId: 2
-// ──────────────────────────────────────────────
 class AreaProgressAdapter extends TypeAdapter<AreaProgress> {
   @override
   final int typeId = 2;

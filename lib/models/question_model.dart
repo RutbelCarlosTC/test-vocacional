@@ -15,12 +15,14 @@ class OptionModel {
 class QuestionModel {
   final int id;
   final String area;
+  final String? dimension; // Nueva propiedad opcional
   final String question;
   final List<OptionModel> options;
 
   QuestionModel({
     required this.id,
     required this.area,
+    this.dimension,
     required this.question,
     required this.options,
   });
@@ -29,6 +31,7 @@ class QuestionModel {
     return QuestionModel(
       id: map['id'] as int,
       area: map['area'] as String,
+      dimension: map['dimension'] as String?,
       question: map['question'] as String,
       options: (map['options'] as List)
           .map((o) => OptionModel.fromMap(o as Map<String, dynamic>))
@@ -64,6 +67,26 @@ extension EvaluationAreaExtension on EvaluationArea {
         return 'Aptitudes Intelectuales';
       case EvaluationArea.personalidad:
         return 'Características de la Personalidad';
+    }
+  }
+
+  String get assetPath {
+    switch (this) {
+      case EvaluationArea.preferencias:
+        return 'assets/data/preferencias.json';
+      case EvaluationArea.aptitudes:
+        return 'assets/data/aptitudes.json';
+      case EvaluationArea.personalidad:
+        return 'assets/data/personalidad.json';
+    }
+  }
+
+  String get scoringType {
+    switch (this) {
+      case EvaluationArea.personalidad:
+        return 'dimensions';
+      default:
+        return 'affinity';
     }
   }
 
