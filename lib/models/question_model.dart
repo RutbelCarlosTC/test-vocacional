@@ -1,13 +1,22 @@
 class OptionModel {
   final String text;
   final int value;
+  final String? macroArea; // FIS, BIO, SOC
+  final String? careerTag; // Ingeniería Civil, Medicina, etc.
 
-  OptionModel({required this.text, required this.value});
+  OptionModel({
+    required this.text,
+    required this.value,
+    this.macroArea,
+    this.careerTag,
+  });
 
   factory OptionModel.fromMap(Map<String, dynamic> map) {
     return OptionModel(
       text: map['text'] as String,
       value: map['value'] as int,
+      macroArea: map['macroArea'] as String?,
+      careerTag: map['careerTag'] as String?,
     );
   }
 }
@@ -83,6 +92,8 @@ extension EvaluationAreaExtension on EvaluationArea {
 
   String get scoringType {
     switch (this) {
+      case EvaluationArea.preferencias:
+        return 'preferencias_triadas';
       case EvaluationArea.personalidad:
         return 'dimensions';
       default:

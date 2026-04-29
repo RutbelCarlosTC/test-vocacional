@@ -1,28 +1,302 @@
 [
   {
-    "id": 101,
+    "id": 1,
     "area": "Preferencias Profesionales",
-    "dimension": "Científico-Tecnológica",
-    "question": "¿Qué tanto te interesaría diseñar y programar una aplicación móvil?",
+    "question": "Selecciona la actividad que más te agrade:",
     "options": [
-      {"text": "Nada", "value": 1},
-      {"text": "Poco", "value": 2},
-      {"text": "Regular", "value": 3},
-      {"text": "Mucho", "value": 4},
-      {"text": "Me encanta", "value": 5}
+      { "text": "Calcular la resistencia de un puente", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Civil" },
+      { "text": "Tomar los signos vitales de un paciente", "value": 1, "macroArea": "BIO", "careerTag": "Enfermería" },
+      { "text": "Redactar un editorial sobre política educativa", "value": 1, "macroArea": "SOC", "careerTag": "Ciencias de la Comunicación" }
     ]
   },
   {
-    "id": 102,
+    "id": 2,
     "area": "Preferencias Profesionales",
-    "dimension": "Administrativa",
-    "question": "¿Te gustaría organizar y dirigir los recursos de una empresa?",
+    "question": "Selecciona la actividad que más te agrade:",
     "options": [
-      {"text": "Nada", "value": 1},
-      {"text": "Poco", "value": 2},
-      {"text": "Regular", "value": 3},
-      {"text": "Mucho", "value": 4},
-      {"text": "Me encanta", "value": 5}
+      { "text": "Llevar el registro exacto de ingresos y gastos de una empresa", "value": 1, "macroArea": "SOC", "careerTag": "Contabilidad" },
+      { "text": "Diseñar una app para organizar tareas", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Sistemas" },
+      { "text": "Evaluar el estado nutricional de atletas", "value": 1, "macroArea": "BIO", "careerTag": "Ciencias de la Nutrición" }
+    ]
+  },
+  {
+    "id": 3,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Investigar bacterias en un microscopio", "value": 1, "macroArea": "BIO", "careerTag": "Biología" },
+      { "text": "Investigar culturas amazónicas en campo", "value": 1, "macroArea": "SOC", "careerTag": "Antropología" },
+      { "text": "Diseñar un sistema de purificación de agua", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Química" }
+    ]
+  },
+  {
+    "id": 4,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Escribir un ensayo sobre derechos humanos", "value": 1, "macroArea": "SOC", "careerTag": "Derecho" },
+      { "text": "Realizar un mapa genético en laboratorio", "value": 1, "macroArea": "BIO", "careerTag": "Medicina" },
+      { "text": "Calcular la estabilidad de una estructura", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Civil" }
+    ]
+  },
+  {
+    "id": 5,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Diseñar un motor de bajo consumo energético", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Mecánica" },
+      { "text": "Diseñar un menú balanceado para deportistas", "value": 1, "macroArea": "BIO", "careerTag": "Ciencias de la Nutrición" },
+      { "text": "Coordinar un programa de inclusión social", "value": 1, "macroArea": "SOC", "careerTag": "Psicología" }
+    ]
+  },
+  {
+    "id": 6,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Crear una campaña publicitaria para redes sociales", "value": 1, "macroArea": "SOC", "careerTag": "Marketing" },
+      { "text": "Automatizar el control de luces de una casa", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Sistemas" },
+      { "text": "Analizar muestras de sangre en laboratorio", "value": 1, "macroArea": "BIO", "careerTag": "Medicina" }
+    ]
+  },
+  {
+    "id": 7,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Coordinar actividades para niños en una escuela", "value": 1, "macroArea": "SOC", "careerTag": "Educación Inicial" },
+      { "text": "Diseñar un sistema de riego automatizado", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Sanitaria" },
+      { "text": "Estudiar el comportamiento de especies marinas", "value": 1, "macroArea": "BIO", "careerTag": "Ingeniería Pesquera" }
+    ]
+  },
+  {
+    "id": 8,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Diagnosticar síntomas de una enfermedad viral", "value": 1, "macroArea": "BIO", "careerTag": "Medicina" },
+      { "text": "Analizar el ciclo de vida de un material plástico", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Industrias Alimentarias" },
+      { "text": "Mediar en un conflicto entre comunidades", "value": 1, "macroArea": "SOC", "careerTag": "Derecho" }
+    ]
+  },
+  {
+    "id": 9,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Simular un juicio con casos reales", "value": 1, "macroArea": "SOC", "careerTag": "Derecho" },
+      { "text": "Supervisar la producción en una planta industrial", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Mecánica" },
+      { "text": "Realizar terapia física a pacientes", "value": 1, "macroArea": "BIO", "careerTag": "Enfermería" }
+    ]
+  },
+  {
+    "id": 10,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Dibujar en 3D el diseño de un edificio", "value": 1, "macroArea": "FIS", "careerTag": "Arquitectura" },
+      { "text": "Hacer un seguimiento a la dieta de niños", "value": 1, "macroArea": "BIO", "careerTag": "Ciencias de la Nutrición" },
+      { "text": "Organizar debates sobre temas actuales", "value": 1, "macroArea": "SOC", "careerTag": "Ciencias de la Comunicación" }
+    ]
+  },
+  {
+    "id": 11,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Diseñar un mural artístico para un evento escolar", "value": 1, "macroArea": "SOC", "careerTag": "Artes" },
+      { "text": "Investigar teorías físicas sobre el origen del universo", "value": 1, "macroArea": "FIS", "careerTag": "Física" },
+      { "text": "Cultivar plantas para mejorar la producción agrícola", "value": 1, "macroArea": "BIO", "careerTag": "Agronomía" }
+    ]
+  },
+  {
+    "id": 12,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Participar en una excavación geológica", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Geológica" },
+      { "text": "Aplicar vacunas en una campaña de salud", "value": 1, "macroArea": "BIO", "careerTag": "Enfermería" },
+      { "text": "Enseñar técnicas de estudio a estudiantes", "value": 1, "macroArea": "SOC", "careerTag": "Educación Primaria" }
+    ]
+  },
+  {
+    "id": 13,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Crear una clase sobre historia del Perú", "value": 1, "macroArea": "SOC", "careerTag": "Educación Secundaria" },
+      { "text": "Desarrollar un software para control de inventarios", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Sistemas" },
+      { "text": "Investigar enfermedades tropicales", "value": 1, "macroArea": "BIO", "careerTag": "Microbiología" }
+    ]
+  },
+  {
+    "id": 14,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Estudiar especies marinas en campo", "value": 1, "macroArea": "BIO", "careerTag": "Ingeniería Pesquera" },
+      { "text": "Elaborar un análisis financiero de una microempresa", "value": 1, "macroArea": "SOC", "careerTag": "Economía" },
+      { "text": "Diseñar puentes colgantes para zonas rurales", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Civil" }
+    ]
+  },
+  {
+    "id": 15,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Crear un prototipo de vehículo eléctrico", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Mecánica" },
+      { "text": "Realizar una historia clínica en un centro de salud", "value": 1, "macroArea": "BIO", "careerTag": "Medicina" },
+      { "text": "Planificar estrategias de marketing digital", "value": 1, "macroArea": "SOC", "careerTag": "Marketing" }
+    ]
+  },
+  {
+    "id": 16,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Organizar una feria cultural comunitaria", "value": 1, "macroArea": "SOC", "careerTag": "Sociología" },
+      { "text": "Hacer pruebas de laboratorio con minerales", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Geológica" },
+      { "text": "Diseñar dietas terapéuticas para pacientes", "value": 1, "macroArea": "BIO", "careerTag": "Ciencias de la Nutrición" }
+    ]
+  },
+  {
+    "id": 17,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Aplicar una prueba de orientación vocacional", "value": 1, "macroArea": "SOC", "careerTag": "Psicología" },
+      { "text": "Diseñar un cartel educativo sobre alimentación", "value": 1, "macroArea": "BIO", "careerTag": "Ciencias de la Nutrición" },
+      { "text": "Programar un robot para tareas domésticas", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Sistemas" }
+    ]
+  },
+  {
+    "id": 18,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Analizar datos climáticos para estudios ambientales", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Geofísica" },
+      { "text": "Escribir cuentos o poemas para jóvenes", "value": 1, "macroArea": "SOC", "careerTag": "Literatura" },
+      { "text": "Estudiar el desarrollo de embriones", "value": 1, "macroArea": "BIO", "careerTag": "Biología" }
+    ]
+  },
+  {
+    "id": 19,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Elaborar un plan de negocios para un emprendimiento", "value": 1, "macroArea": "SOC", "careerTag": "Administración" },
+      { "text": "Programar un asistente virtual", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Sistemas" },
+      { "text": "Atender emergencias médicas", "value": 1, "macroArea": "BIO", "careerTag": "Enfermería" }
+    ]
+  },
+  {
+    "id": 20,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Realizar un análisis químico de materiales", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Química" },
+      { "text": "Ayudar a pacientes hospitalizados a movilizarse", "value": 1, "macroArea": "BIO", "careerTag": "Enfermería" },
+      { "text": "Gestionar el bienestar laboral y contratos de trabajadores", "value": 1, "macroArea": "SOC", "careerTag": "Relaciones Industriales" }
+    ]
+  },
+  {
+    "id": 21,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Enseñar inglés a estudiantes de secundaria", "value": 1, "macroArea": "SOC", "careerTag": "Educación Secundaria" },
+      { "text": "Clasificar insectos de un ecosistema local", "value": 1, "macroArea": "BIO", "careerTag": "Biología" },
+      { "text": "Diseñar circuitos electrónicos avanzados", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Electrónica" }
+    ]
+  },
+  {
+    "id": 22,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Estimar el presupuesto de un proyecto público", "value": 1, "macroArea": "SOC", "careerTag": "Economía" },
+      { "text": "Calcular estructuras para una presa", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Civil" },
+      { "text": "Realizar estudios de contaminación marina", "value": 1, "macroArea": "BIO", "careerTag": "Ingeniería Pesquera" }
+    ]
+  },
+  {
+    "id": 23,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Crear contenido para un canal de YouTube educativo", "value": 1, "macroArea": "SOC", "careerTag": "Ciencias de la Comunicación" },
+      { "text": "Diseñar sistemas de seguridad en minas", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Minas" },
+      { "text": "Desarrollar suplementos nutricionales", "value": 1, "macroArea": "BIO", "careerTag": "Ciencias de la Nutrición" }
+    ]
+  },
+  {
+    "id": 24,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Atender a turistas en un city tour histórico", "value": 1, "macroArea": "SOC", "careerTag": "Historia" },
+      { "text": "Observar la adaptación de peces en agua fría", "value": 1, "macroArea": "BIO", "careerTag": "Ingeniería Pesquera" },
+      { "text": "Optimizar procesos químicos industriales", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Química" }
+    ]
+  },
+  {
+    "id": 25,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Resolver problemas emocionales entre adolescentes", "value": 1, "macroArea": "SOC", "careerTag": "Psicología" },
+      { "text": "Diseñar un proceso más eficiente para un sistema de ensamblaje", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Mecánica" },
+      { "text": "Investigar nuevos tratamientos médicos", "value": 1, "macroArea": "BIO", "careerTag": "Medicina" }
+    ]
+  },
+  {
+    "id": 26,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Realizar entrevistas para un programa de radio", "value": 1, "macroArea": "SOC", "careerTag": "Ciencias de la Comunicación" },
+      { "text": "Diseñar un sistema de ventilación para un hospital", "value": 1, "macroArea": "FIS", "careerTag": "Arquitectura" },
+      { "text": "Rehabilitar pacientes con lesiones deportivas", "value": 1, "macroArea": "BIO", "careerTag": "Enfermería" }
+    ]
+  },
+  {
+    "id": 27,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Planificar campañas de salud preventiva", "value": 1, "macroArea": "BIO", "careerTag": "Enfermería" },
+      { "text": "Diseñar estrategias para captar nuevos clientes", "value": 1, "macroArea": "SOC", "careerTag": "Marketing" },
+      { "text": "Crear simulaciones físicas por computadora", "value": 1, "macroArea": "FIS", "careerTag": "Ciencia de la Computación" }
+    ]
+  },
+  {
+    "id": 28,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Controlar la alimentación en un albergue infantil", "value": 1, "macroArea": "BIO", "careerTag": "Ciencias de la Nutrición" },
+      { "text": "Automatizar un sistema de riego con sensores", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería de Sistemas" },
+      { "text": "Coordinar programas de bienestar social", "value": 1, "macroArea": "SOC", "careerTag": "Psicología" }
+    ]
+  },
+  {
+    "id": 29,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Leer y comentar textos filosóficos en grupo", "value": 1, "macroArea": "SOC", "careerTag": "Filosofía" },
+      { "text": "Crear una presentación científica con resultados de laboratorio", "value": 1, "macroArea": "FIS", "careerTag": "Ciencia de la Computación" },
+      { "text": "Estudiar la reproducción de especies en peligro", "value": 1, "macroArea": "BIO", "careerTag": "Biología" }
+    ]
+  },
+  {
+    "id": 30,
+    "area": "Preferencias Profesionales",
+    "question": "Selecciona la actividad que más te agrade:",
+    "options": [
+      { "text": "Participar en la evaluación ambiental de un río", "value": 1, "macroArea": "BIO", "careerTag": "Ingeniería Pesquera" },
+      { "text": "Elaborar un contrato legal para una empresa", "value": 1, "macroArea": "SOC", "careerTag": "Derecho" },
+      { "text": "Diseñar tecnología para exploración espacial", "value": 1, "macroArea": "FIS", "careerTag": "Ingeniería Mecánica" }
     ]
   }
 ]

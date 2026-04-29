@@ -115,10 +115,16 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Afinidad: ${attempt.afinidadPrimaria}', 
-                                      style: TextStyle(color: Colors.green.shade700, fontWeight: FontWeight.w500)),
-                                  const SizedBox(height: 4),
-                                  Text('${attempt.scoreLabel} (${attempt.percentage.toStringAsFixed(0)}%)'),
+                                  if (area != EvaluationArea.personalidad)
+                                    Text('Afinidad: ${attempt.afinidadPrimaria}',
+                                        style: TextStyle(
+                                            color: Colors.green.shade700,
+                                            fontWeight: FontWeight.w500))
+                                  else
+                                    const Text('Evaluación completada',
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.w500)),
                                 ],
                               ),
                             )

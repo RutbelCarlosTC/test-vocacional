@@ -114,6 +114,12 @@ class EvaluationService {
       } else {
         dimensionScores = _calcDimensionScores(answers, questions);
       }
+    } else if (scoringType == 'preferencias_triadas') {
+      final results = _calcPreferenciasTriadas(answers, questions);
+      dimensionScores = results.macroScores;
+      p1 = results.topCareers[0];
+      p2 = results.topCareers[1];
+      p3 = results.topCareers[2];
     } else {
       final afinidades = _calcAfinidades(area, totalScore, maxScore);
       p1 = afinidades[0];
@@ -229,6 +235,62 @@ class EvaluationService {
     }).toList();
   }
 
+  _PreferenciasResult _calcPreferenciasTriadas(
+      List<AnswerRecord> answers, List<QuestionModel> questions) {
+    final Map<String, int> macroScores = {'FIS': 0, 'BIO': 0, 'SOC': 0};
+    final Map<String, int> careerScores = {};
+
+    for (var ans in answers) {
+      final question = questions.firstWhere((q) => q.id == ans.questionId);
+      final option =
+          question.options.firstWhere((o) => o.text == ans.selectedOption);
+
+      if (option.macroArea != null) {
+        macroScores[option.macroArea!] =
+            (macroScores[option.macroArea!] ?? 0) + 1;
+      }
+      if (option.careerTag != null) {
+        careerScores[option.careerTag!] =
+            (careerScores[option.careerTag!] ?? 0) + 1;
+      }
+    }
+
+    // Convertir macroScores a DimensionScore
+    final List<DimensionScore> dimensionScores = macroScores.entries.map((e) {
+      final score = e.value;
+      String level = 'Bajo';
+      if (score >= 20)
+        level = 'Muy Alto';
+      else if (score >= 14)
+        level = 'Alto';
+      else if (score >= 7) level = 'Medio';
+
+      String label = e.key;
+      if (e.key == 'FIS') label = 'Ciencias Físicas e Ingenierías';
+      if (e.key == 'BIO') label = 'Ciencias Biológicas y de la Salud';
+      if (e.key == 'SOC') label = 'Ciencias Sociales y Humanidades';
+
+      return DimensionScore(
+        key: e.key,
+        label: label,
+        score: score,
+        maxScore: 30,
+        level: level,
+      );
+    }).toList();
+
+    // Obtener Top 3 carreras
+    final sortedCareers = careerScores.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    final top3 = sortedCareers.take(3).map((e) => e.key).toList();
+    while (top3.length < 3) {
+      top3.add('N/A');
+    }
+
+    return _PreferenciasResult(dimensionScores, top3);
+  }
+
   // ── Helpers ──────────────────────────────────────────────
 
   int _calcMaxScore(List<QuestionModel> questions) {
@@ -285,4 +347,10 @@ class EvaluationService {
 
     return [opciones[primaryIdx], opciones[secondaryIdx], opciones[tertiaryIdx]];
   }
+}
+
+class _PreferenciasResult {
+  final List<DimensionScore> macroScores;
+  final List<String> topCareers;
+  _PreferenciasResult(this.macroScores, this.topCareers);
 }
