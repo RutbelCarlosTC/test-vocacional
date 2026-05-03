@@ -313,12 +313,6 @@ class EvaluationService {
         'Humanidades / Educación',
         'Arte / Diseño',
       ],
-      EvaluationArea.aptitudes: [
-        'Matemáticas / Física / Ingeniería',
-        'Ciencias Sociales / Derecho',
-        'Arte / Comunicaciones',
-        'Técnico / Oficios especializados',
-      ],
       EvaluationArea.personalidad: [
         'Liderazgo / Gestión Empresarial',
         'Docencia / Psicología',

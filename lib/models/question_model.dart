@@ -52,7 +52,6 @@ class QuestionModel {
 // Las 3 áreas del test
 enum EvaluationArea {
   preferencias,
-  aptitudes,
   personalidad,
 }
 
@@ -61,8 +60,6 @@ extension EvaluationAreaExtension on EvaluationArea {
     switch (this) {
       case EvaluationArea.preferencias:
         return 'Preferencias Profesionales';
-      case EvaluationArea.aptitudes:
-        return 'Aptitudes Intelectuales';
       case EvaluationArea.personalidad:
         return 'Características de la Personalidad';
     }
@@ -72,8 +69,6 @@ extension EvaluationAreaExtension on EvaluationArea {
     switch (this) {
       case EvaluationArea.preferencias:
         return 'Preferencias Profesionales';
-      case EvaluationArea.aptitudes:
-        return 'Aptitudes Intelectuales';
       case EvaluationArea.personalidad:
         return 'Características de la Personalidad';
     }
@@ -83,8 +78,6 @@ extension EvaluationAreaExtension on EvaluationArea {
     switch (this) {
       case EvaluationArea.preferencias:
         return 'assets/data/preferencias.json';
-      case EvaluationArea.aptitudes:
-        return 'assets/data/aptitudes.json';
       case EvaluationArea.personalidad:
         return 'assets/data/personalidad.json';
     }
@@ -105,8 +98,6 @@ extension EvaluationAreaExtension on EvaluationArea {
     switch (this) {
       case EvaluationArea.preferencias:
         return 'Evalúa tu grado de interés hacia distintas áreas de estudio.';
-      case EvaluationArea.aptitudes:
-        return 'Evalúa tus aptitudes e inteligencia general.';
       case EvaluationArea.personalidad:
         return 'Evalúa tus rasgos de personalidad: logro, liderazgo y más.';
     }

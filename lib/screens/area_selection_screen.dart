@@ -162,18 +162,6 @@ class _AreaCard extends StatelessWidget {
               style: const TextStyle(fontSize: 13, color: Colors.grey),
             ),
 
-            // Último resultado (si existe)
-            if (hasAttempts) ...[
-              const SizedBox(height: 10),
-              const Divider(height: 1),
-              const SizedBox(height: 10),
-              Text(
-                'Último intento: ${progress.latestAttempt!.scoreLabel} '
-                '(${progress.latestAttempt!.percentage.toStringAsFixed(0)}%)',
-                style: const TextStyle(fontSize: 13),
-              ),
-            ],
-
             // Borrador en curso
             if (progress.hasDraft) ...[
               const SizedBox(height: 12),
