@@ -1,0 +1,27 @@
+{
+  "Disciplina Académica": {
+    "Alto": "Eres constante, organizado y cumples tus metas académicas. Aprovecha esta fortaleza para asumir retos más exigentes y apoyar a otros en su planificación.",
+    "Medio": "Tienes buenos hábitos, pero aún puedes mejorar tu organización y constancia. Intenta establecer horarios fijos y metas claras.",
+    "Bajo": "Te cuesta mantener la disciplina en tus estudios. Es recomendable crear rutinas simples, usar recordatorios y dividir tus tareas en partes pequeñas."
+  },
+  "Resiliencia y Manejo del Estrés": {
+    "Alto": "Manejas muy bien la presión y te recuperas rápidamente de las dificultades. Esta habilidad te ayudará en entornos exigentes.",
+    "Medio": "En algunas situaciones controlas bien el estrés, pero en otras te afecta. Practicar técnicas de relajación puede ayudarte.",
+    "Bajo": "El estrés puede afectar tu rendimiento. Es importante trabajar en técnicas como la respiración, organización del tiempo y descanso adecuado."
+  },
+  "Curiosidad Intelectual": {
+    "Alto": "Tienes un gran interés por aprender y entender a fondo los temas. Esto es clave para el pensamiento crítico y la innovación.",
+    "Medio": "Muestras interés por aprender, pero puedes profundizar más. Intenta explorar temas por tu cuenta o hacer más preguntas.",
+    "Bajo": "Tiendes a limitarte a lo básico. Desarrollar tu curiosidad te ayudará a comprender mejor y destacar académicamente."
+  },
+  "Liderazgo y Sociabilidad": {
+    "Alto": "Te comunicas con confianza y tienes facilidad para liderar. Puedes influir positivamente en grupos y proyectos.",
+    "Medio": "A veces participas activamente, pero podrías involucrarte más. Practicar la comunicación te ayudará a ganar confianza.",
+    "Bajo": "Prefieres mantenerte en segundo plano. Trabajar en tu comunicación y participación puede abrirte más oportunidades."
+  },
+  "Aprendizaje Colaborativo": {
+    "Alto": "Disfrutas trabajar en equipo y ayudar a otros. Esto fortalece el aprendizaje colectivo y tus habilidades sociales.",
+    "Medio": "Colaboras en algunas situaciones, pero puedes involucrarte más activamente en el trabajo en equipo.",
+    "Bajo": "Prefieres trabajar de forma individual. Desarrollar habilidades colaborativas te permitirá aprender de otros y mejorar tus resultados."
+  }
+}
