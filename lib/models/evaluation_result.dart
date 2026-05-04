@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'evaluation_result.g.dart';
 
-const int kMaxAttempts = 3;
+const int kMaxAttempts = 2;
 
 // ──────────────────────────────────────────────
 // Respuesta individual  (typeId: 0)

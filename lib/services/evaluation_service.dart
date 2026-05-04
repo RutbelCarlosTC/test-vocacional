@@ -142,6 +142,17 @@ class EvaluationService {
       isValid: isValid,
     );
 
+    // Si es personalidad y es inválida, NO guardamos el intento en el historial
+    if (area == EvaluationArea.personalidad && !isValid) {
+      // Limpiamos el borrador para que pueda empezar de cero, pero no añadimos el intento
+      final updated = progress.copyWith(
+        draftAnswers: [],
+        draftLastIndex: 0,
+      );
+      await _box.put(_key(profileId, area), updated);
+      return attempt; // Lo devolvemos para que la UI pueda mostrar el aviso
+    }
+
     final updated = progress.copyWith(
       attempts: [...progress.attempts, attempt],
       draftAnswers: [],

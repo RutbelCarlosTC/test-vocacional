@@ -167,12 +167,12 @@ class _AreaCard extends StatelessWidget {
               const SizedBox(height: 12),
               Builder(
                 builder: (context) {
-                  // Usamos directamente el totalQuestions que pasamos al widget _AreaCard
-                  final int answeredQuestions = progress.draftLastIndex;
+                  // Obtenemos la pregunta en la que se quedó (índice + 1)
+                  final int currentQuestion = progress.draftLastIndex + 1;
 
-                  // Calculamos el progreso (evitando división por cero)
+                  // Calculamos el progreso para que coincida con QuizScreen (pregunta actual / total)
                   final double progressValue = totalQuestions > 0
-                      ? (answeredQuestions / totalQuestions).clamp(0.0, 1.0)
+                      ? (currentQuestion / totalQuestions).clamp(0.0, 1.0)
                       : 0.0;
                   final int progressPercent = (progressValue * 100).toInt();
 
@@ -183,7 +183,7 @@ class _AreaCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'En progreso (pregunta ${answeredQuestions + 1})',
+                            'En progreso (pregunta $currentQuestion)',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,

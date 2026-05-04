@@ -64,6 +64,24 @@ class _QuizScreenState extends State<QuizScreen>
       _answers.addAll(progress.draftAnswers);
       startIndex = progress.draftLastIndex;
       if (startIndex >= questions.length) startIndex = questions.length - 1;
+
+      // Si hay una respuesta guardada para el índice inicial, pre-seleccionarla
+      if (startIndex < _answers.length) {
+        final savedAns = _answers.firstWhere(
+          (a) => a.questionId == questions[startIndex].id,
+          orElse: () => AnswerRecord(
+              questionId: -1,
+              questionText: '',
+              selectedOption: '',
+              value: 0),
+        );
+        if (savedAns.questionId != -1) {
+          _selectedOption = questions[startIndex].options.firstWhere(
+                (o) => o.text == savedAns.selectedOption,
+                orElse: () => questions[startIndex].options[0],
+              );
+        }
+      }
     }
 
     setState(() {
@@ -76,6 +94,52 @@ class _QuizScreenState extends State<QuizScreen>
 
   void _selectAnswer(OptionModel option) {
     setState(() => _selectedOption = option);
+  }
+
+  Future<void> _handleBack() async {
+    if (_currentIndex > 0) {
+      // Guardar la respuesta actual si hay algo seleccionado antes de retroceder
+      if (_selectedOption != null) {
+        final question = _questions[_currentIndex];
+        final answer = AnswerRecord(
+          questionId: question.id,
+          questionText: question.question,
+          selectedOption: _selectedOption!.text,
+          value: _selectedOption!.value,
+        );
+        final existingIdx =
+            _answers.indexWhere((a) => a.questionId == question.id);
+        if (existingIdx >= 0) {
+          _answers[existingIdx] = answer;
+        } else {
+          _answers.add(answer);
+        }
+      }
+
+      setState(() {
+        _currentIndex--;
+        // Recuperar la respuesta previa
+        final prevQuestion = _questions[_currentIndex];
+        final prevAns = _answers.firstWhere(
+          (a) => a.questionId == prevQuestion.id,
+          orElse: () => AnswerRecord(
+              questionId: -1,
+              questionText: '',
+              selectedOption: '',
+              value: 0),
+        );
+
+        if (prevAns.questionId != -1) {
+          _selectedOption = prevQuestion.options.firstWhere(
+            (o) => o.text == prevAns.selectedOption,
+            orElse: () => prevQuestion.options[0],
+          );
+        } else {
+          _selectedOption = null;
+        }
+      });
+      _animController.forward(from: 0);
+    }
   }
 
   Future<void> _handleNext() async {
@@ -117,6 +181,12 @@ class _QuizScreenState extends State<QuizScreen>
         return;
       }
 
+      // Lógica específica para personalidad inválida
+      if (widget.area == EvaluationArea.personalidad && !attempt.isValid) {
+        _showInvalidPersonalityDialog();
+        return;
+      }
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -138,10 +208,50 @@ class _QuizScreenState extends State<QuizScreen>
 
       setState(() {
         _currentIndex++;
-        _selectedOption = null;
+        // Ver si ya hay una respuesta para la siguiente pregunta
+        final nextQuestion = _questions[_currentIndex];
+        final nextAns = _answers.firstWhere(
+          (a) => a.questionId == nextQuestion.id,
+          orElse: () => AnswerRecord(
+              questionId: -1,
+              questionText: '',
+              selectedOption: '',
+              value: 0),
+        );
+
+        if (nextAns.questionId != -1) {
+          _selectedOption = nextQuestion.options.firstWhere(
+            (o) => o.text == nextAns.selectedOption,
+            orElse: () => nextQuestion.options[0],
+          );
+        } else {
+          _selectedOption = null;
+        }
       });
       _animController.forward(from: 0);
     }
+  }
+
+  void _showInvalidPersonalityDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Prueba Invalidada'),
+        content: const Text(
+            'Se detectaron respuestas inconsistentes o al azar (Ítem de control no superado). '
+            'Este intento no se guardará en tu historial. Por favor, realiza el test nuevamente con sinceridad.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Cerrar diálogo
+              Navigator.pop(context); // Volver a la pantalla anterior
+            },
+            child: const Text('ENTENDIDO'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<bool> _onWillPop() async {
@@ -189,6 +299,7 @@ class _QuizScreenState extends State<QuizScreen>
                     question: question,
                     questionNumber: _currentIndex + 1,
                     onAnswer: _selectAnswer,
+                    initialOption: _selectedOption,
                   ),
                 ),
               ),
@@ -198,19 +309,42 @@ class _QuizScreenState extends State<QuizScreen>
         bottomNavigationBar: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: _selectedOption == null ? null : _handleNext,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Row(
+              children: [
+                if (_currentIndex > 0)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: OutlinedButton(
+                        onPressed: _handleBack,
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(0, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text('ATRÁS'),
+                      ),
+                    ),
+                  ),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton(
+                    onPressed: _selectedOption == null ? null : _handleNext,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(0, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      _currentIndex == _questions.length - 1
+                          ? 'FINALIZAR'
+                          : 'SIGUIENTE',
+                    ),
+                  ),
                 ),
-              ),
-              child: Text(
-                _currentIndex == _questions.length - 1
-                    ? 'FINALIZAR'
-                    : 'SIGUIENTE',
-              ),
+              ],
             ),
           ),
         ),
@@ -284,12 +418,14 @@ class _QuestionCard extends StatefulWidget {
   final QuestionModel question;
   final int questionNumber;
   final void Function(OptionModel) onAnswer;
+  final OptionModel? initialOption;
 
   const _QuestionCard({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.onAnswer,
+    this.initialOption,
   });
 
   @override
@@ -298,6 +434,17 @@ class _QuestionCard extends StatefulWidget {
 
 class _QuestionCardState extends State<_QuestionCard> {
   int? _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialOption != null) {
+      _selectedIndex = widget.question.options.indexWhere(
+        (o) => o.text == widget.initialOption!.text,
+      );
+      if (_selectedIndex == -1) _selectedIndex = null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
