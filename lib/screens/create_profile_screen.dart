@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/user_profile.dart';
 import '../services/profile_manager.dart';
 import 'home_screen.dart';
@@ -16,17 +18,47 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final List<TextEditingController> _careerControllers = [
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+  ];
 
   String _gender = 'Masculino';
+  String _schoolType = 'Nacional'; // Nacional, Parroquial, Particular
   DateTime? _birthDate;
-  AcademicStatus _academicStatus = AcademicStatus.egresado;
+  AcademicStatus? _academicStatus;
   bool _saving = false;
+
+  List<String> _allCareers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCareers();
+  }
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    for (var controller in _careerControllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  Future<void> _loadCareers() async {
+    try {
+      final String response =
+          await rootBundle.loadString('assets/data/carreras.json');
+      final data = await json.decode(response) as List;
+      setState(() {
+        _allCareers = data.map((e) => e['carrera'] as String).toList();
+      });
+    } catch (e) {
+      debugPrint('Error cargando carreras: $e');
+    }
   }
 
   Future<void> _pickDate() async {
@@ -45,9 +77,19 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+    
     if (_birthDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor selecciona tu fecha de nacimiento.')),
+        const SnackBar(
+            content: Text('Por favor selecciona tu fecha de nacimiento.')),
+      );
+      return;
+    }
+
+    if (_academicStatus == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Por favor selecciona tu estado académico actual.')),
       );
       return;
     }
@@ -60,7 +102,12 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       email: _emailController.text.trim(),
       gender: _gender,
       birthDate: _birthDate!,
-      academicStatus: _academicStatus,
+      academicStatus: _academicStatus!,
+      schoolType: _schoolType,
+      possibleCareers: _careerControllers
+          .map((c) => c.text.trim())
+          .where((t) => t.isNotEmpty)
+          .toList(),
     );
 
     await _manager.saveProfile(profile);
@@ -69,11 +116,33 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     if (!mounted) return;
     setState(() => _saving = false);
 
-    // Si llegamos desde ProfileSelection, reemplazamos toda la pila
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const HomeScreen()),
       (route) => false,
+    );
+  }
+
+  Widget _buildLabel(String label, {bool required = true}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: RichText(
+        text: TextSpan(
+          text: label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+            fontSize: 14,
+          ),
+          children: [
+            if (required)
+              const TextSpan(
+                text: ' *',
+                style: TextStyle(color: Colors.red),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -97,24 +166,27 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               const SizedBox(height: 16),
 
               // Nombre
+              _buildLabel('Nombre completo'),
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Nombre completo',
+                  hintText: 'Ej. Juan Pérez',
                   prefixIcon: Icon(Icons.person_outline),
                   border: OutlineInputBorder(),
                 ),
                 textCapitalization: TextCapitalization.words,
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Ingresa tu nombre' : null,
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Ingresa tu nombre'
+                    : null,
               ),
               const SizedBox(height: 14),
 
               // Correo
+              _buildLabel('Correo electrónico'),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
-                  labelText: 'Correo electrónico',
+                  hintText: 'ejemplo@correo.com',
                   prefixIcon: Icon(Icons.email_outlined),
                   border: OutlineInputBorder(),
                 ),
@@ -128,8 +200,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               const SizedBox(height: 14),
 
               // Género
-              const Text('Género', style: TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 6),
+              _buildLabel('Género'),
               _GenderSelector(
                 selected: _gender,
                 onChanged: (val) => setState(() => _gender = val),
@@ -137,13 +208,12 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               const SizedBox(height: 14),
 
               // Fecha de nacimiento
-              const Text('Fecha de nacimiento',
-                  style: TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 6),
+              _buildLabel('Fecha de nacimiento'),
               InkWell(
                 onTap: _pickDate,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(4),
@@ -160,7 +230,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                 '${_birthDate!.month.toString().padLeft(2, '0')}/'
                                 '${_birthDate!.year}',
                         style: TextStyle(
-                          color: _birthDate == null ? Colors.grey : Colors.black,
+                          color:
+                              _birthDate == null ? Colors.grey : Colors.black,
                           fontSize: 16,
                         ),
                       ),
@@ -171,20 +242,96 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               const SizedBox(height: 20),
 
               const Text(
-                'Nivel académico',
+                'Educación de Procedencia',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
 
+              // Tipo de colegio
+              _buildLabel('Tipo de colegio de procedencia'),
+              DropdownButtonFormField<String>(
+                value: _schoolType,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                ),
+                items: ['Nacional', 'Parroquial', 'Particular']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (val) => setState(() => _schoolType = val!),
+              ),
+              const SizedBox(height: 14),
+
               // Academic status
-              ...AcademicStatus.values.map((status) => RadioListTile<AcademicStatus>(
-                    title: Text(status.label),
-                    value: status,
-                    groupValue: _academicStatus,
-                    onChanged: (val) =>
-                        setState(() => _academicStatus = val!),
-                    contentPadding: EdgeInsets.zero,
-                  )),
+              _buildLabel('Estado académico actual'),
+              ...AcademicStatus.values
+                  .map((status) => RadioListTile<AcademicStatus>(
+                        title: Text(status.label),
+                        value: status,
+                        groupValue: _academicStatus,
+                        onChanged: (val) =>
+                            setState(() => _academicStatus = val!),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      )),
+
+              const SizedBox(height: 20),
+
+              const Text(
+                'Posibles Carreras',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 6),
+              const Text('Selecciona hasta 3 carreras de tu interés',
+                  style: TextStyle(fontSize: 13, color: Colors.grey)),
+              const SizedBox(height: 12),
+
+              // Carreras autocompletables
+              ...List.generate(3, (index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Autocomplete<String>(
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<String>.empty();
+                      }
+                      return _allCareers.where((String option) {
+                        return option
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase());
+                      });
+                    },
+                    onSelected: (String selection) {
+                      _careerControllers[index].text = selection;
+                    },
+                    fieldViewBuilder:
+                        (context, controller, focusNode, onFieldSubmitted) {
+                      // Sincronizar con nuestro controlador
+                      controller.text = _careerControllers[index].text;
+                      controller.addListener(() {
+                         _careerControllers[index].text = controller.text;
+                      });
+                      
+                      return TextFormField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          labelText: 'Opción ${index + 1}${index == 0 ? " *" : ""}',
+                          labelStyle: index == 0 ? const TextStyle(color: Colors.black) : null,
+                          border: const OutlineInputBorder(),
+                          prefixIcon: const Icon(Icons.school_outlined),
+                        ),
+                        validator: (v) {
+                          if (index == 0 && (v == null || v.isEmpty)) {
+                            return 'Al menos una carrera es requerida';
+                          }
+                          return null;
+                        },
+                      );
+                    },
+                  ),
+                );
+              }),
 
               const SizedBox(height: 24),
 
@@ -222,9 +369,32 @@ class _GenderSelector extends StatelessWidget {
     required this.onChanged,
   });
 
+  Widget _buildLabel(String label, {bool required = true}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: RichText(
+        text: TextSpan(
+          text: label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+            fontSize: 14,
+          ),
+          children: [
+            if (required)
+              const TextSpan(
+                text: ' *',
+                style: TextStyle(color: Colors.red),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    const options = ['Masculino', 'Femenino', 'Otro'];
+    const options = ['Masculino', 'Femenino'];
     return Row(
       children: options
           .map(

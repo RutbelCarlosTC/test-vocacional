@@ -5,7 +5,7 @@ import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
 
 class EvaluationService {
-  static const String _boxName = 'area_progress_v4'; // Cambiado a v4 para evitar errores de casteo con datos viejos
+  static const String _boxName = 'area_progress_v5'; // Cambiado a v4 para evitar errores de casteo con datos viejos
 
   static final EvaluationService _instance = EvaluationService._internal();
   factory EvaluationService() => _instance;

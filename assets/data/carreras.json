@@ -1,0 +1,126 @@
+[
+  {
+    "carrera": "Ingeniería Civil",
+    "descripcion": "Forma profesionales capaces de planificar, diseñar, construir y gestionar infraestructuras como edificios, puentes y carreteras, aplicando normativas de seguridad y sostenibilidad."
+  },
+  {
+    "carrera": "Ingeniería de Sistemas",
+    "descripcion": "Especializada en el diseño, desarrollo y gestión de sistemas de información y software complejos para optimizar procesos organizacionales mediante tecnología."
+  },
+  {
+    "carrera": "Enfermería",
+    "descripcion": "Profesión centrada en el cuidado integral de la salud del individuo, familia y comunidad, mediante la prevención, recuperación y rehabilitación de enfermedades."
+  },
+  {
+    "carrera": "Ciencias de la Comunicación",
+    "descripcion": "Forma expertos en la gestión de la información, periodismo, relaciones públicas y producción audiovisual para diversos medios y organizaciones."
+  },
+  {
+    "carrera": "Contabilidad",
+    "descripcion": "Se encarga del registro, análisis e interpretación de la información financiera de entidades para la toma de decisiones estratégicas y cumplimiento tributario."
+  },
+  {
+    "carrera": "Ciencias de la Nutrición",
+    "descripcion": "Estudia los procesos alimentarios y nutricionales para promover estilos de vida saludables y tratar patologías mediante regímenes dietéticos específicos."
+  },
+  {
+    "carrera": "Biología",
+    "descripcion": "Investiga los organismos vivos, su origen, evolución y propiedades, contribuyendo a la conservación de la biodiversidad y biotecnología."
+  },
+  {
+    "carrera": "Antropología",
+    "descripcion": "Estudio integral del ser humano en sus dimensiones biológica, social y cultural, analizando la diversidad de las sociedades humanas a través del tiempo."
+  },
+  {
+    "carrera": "Ingeniería Química",
+    "descripcion": "Se enfoca en la transformación de materias primas en productos útiles mediante procesos físicos y químicos a escala industrial de manera eficiente."
+  },
+  {
+    "carrera": "Derecho",
+    "descripcion": "Forma profesionales con sólidos conocimientos legales para la defensa de los derechos, la justicia y el asesoramiento jurídico en el sector público y privado."
+  },
+  {
+    "carrera": "Medicina",
+    "descripcion": "Dedicada al estudio de la vida, salud y enfermedades del ser humano, con el fin de ejercer la prevención, diagnóstico y tratamiento médico."
+  },
+  {
+    "carrera": "Ingeniería Mecánica",
+    "descripcion": "Diseña, analiza y fabrica sistemas mecánicos, máquinas y herramientas, así como la gestión de plantas industriales y energía."
+  },
+  {
+    "carrera": "Psicología",
+    "descripcion": "Estudia los procesos mentales, el comportamiento y las interacciones humanas para promover la salud mental y el bienestar emocional."
+  },
+  {
+    "carrera": "Marketing",
+    "descripcion": "Desarrolla estrategias para la creación, comunicación y entrega de valor a los consumidores, optimizando el posicionamiento de marcas y productos."
+  },
+  {
+    "carrera": "Ingeniería Sanitaria",
+    "descripcion": "Especialidad orientada al diseño de sistemas de agua potable, alcantarillado y tratamiento de residuos para proteger la salud pública y el ambiente."
+  },
+  {
+    "carrera": "Ingeniería Pesquera",
+    "descripcion": "Enfocada en la extracción, transformación y comercialización de recursos hidrobiológicos, asegurando la sostenibilidad de los ecosistemas marinos."
+  },
+  {
+    "carrera": "Ingeniería de Industrias Alimentarias",
+    "descripcion": "Aplica principios de ingeniería para el procesamiento, conservación y control de calidad de los alimentos para el consumo humano."
+  },
+  {
+    "carrera": "Arquitectura",
+    "descripcion": "Combina el arte y la técnica para proyectar, diseñar y construir espacios habitables que respondan a las necesidades humanas y del entorno."
+  },
+  {
+    "carrera": "Artes",
+    "descripcion": "Promueve la expresión creativa y técnica en artes plásticas o música, fomentando la cultura y la investigación estética."
+  },
+  {
+    "carrera": "Física",
+    "descripcion": "Estudia los componentes fundamentales del universo, la energía y la materia, desarrollando modelos teóricos y aplicaciones tecnológicas."
+  },
+  {
+    "carrera": "Agronomía",
+    "descripcion": "Ciencia que busca optimizar la producción agrícola mediante el manejo técnico de cultivos, suelos y recursos hídricos."
+  },
+  {
+    "carrera": "Ingeniería Geológica",
+    "descripcion": "Estudia la composición y estructura de la tierra para la explotación de recursos minerales, hidrocarburos y la prevención de riesgos geológicos."
+  },
+  {
+    "carrera": "Educación",
+    "descripcion": "Forma docentes en niveles Inicial, Primaria y Secundaria, capacitados para la mediación del aprendizaje y la gestión de instituciones educativas."
+  },
+  {
+    "carrera": "Relaciones Industriales",
+    "descripcion": "Gestiona el capital humano en las organizaciones, enfocándose en la legislación laboral, seguridad social y el clima organizacional."
+  },
+  {
+    "carrera": "Economía",
+    "descripcion": "Analiza la producción, distribución y consumo de bienes y servicios para proponer soluciones a problemas financieros y sociales."
+  },
+  {
+    "carrera": "Administración",
+    "descripcion": "Disciplina orientada a la planificación, organización, dirección y control de los recursos de una empresa para lograr objetivos de rentabilidad."
+  },
+  {
+    "carrera": "Ciencia de la Computación",
+    "descripcion": "Estudia las bases teóricas de la información y la computación para el desarrollo de algoritmos, inteligencia artificial y sistemas avanzados."
+  },
+  {
+    "carrera": "Filosofía",
+    "descripcion": "Fomenta el pensamiento crítico y reflexivo sobre los problemas fundamentales de la existencia, el conocimiento y la ética."
+  },
+  {
+    "carrera": "Literatura",
+    "descripcion": "Estudia la creación literaria, el análisis de textos y la evolución del lenguaje en sus contextos históricos y culturales."
+  },
+  {
+    "carrera": "Sociología",
+    "descripcion": "Analiza de forma científica el funcionamiento de las sociedades humanas y los fenómenos colectivos producidos por su actividad social."
+  },
+  {
+    "carrera": "Ingeniería de Minas",
+    "descripcion": "Especializada en la extracción de recursos minerales de la corteza terrestre mediante técnicas seguras, eficientes y responsables."
+  }
+]

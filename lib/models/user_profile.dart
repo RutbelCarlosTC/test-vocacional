@@ -48,6 +48,8 @@ class UserProfile {
   final String gender;
   final DateTime birthDate;
   final AcademicStatus academicStatus;
+  final String schoolType; // Nacional, Parroquial, Particular
+  final List<String> possibleCareers; // 3 opciones
 
   UserProfile({
     required this.id,
@@ -56,6 +58,8 @@ class UserProfile {
     required this.gender,
     required this.birthDate,
     required this.academicStatus,
+    required this.schoolType,
+    required this.possibleCareers,
   });
 
   Map<String, dynamic> toMap() {
@@ -66,6 +70,8 @@ class UserProfile {
       'gender': gender,
       'birthDate': birthDate.toIso8601String(),
       'academicStatus': academicStatus.value,
+      'schoolType': schoolType,
+      'possibleCareers': possibleCareers,
     };
   }
 
@@ -77,6 +83,8 @@ class UserProfile {
       gender: map['gender'],
       birthDate: DateTime.parse(map['birthDate']),
       academicStatus: AcademicStatusExtension.fromValue(map['academicStatus']),
+      schoolType: map['schoolType'] ?? 'Nacional',
+      possibleCareers: List<String>.from(map['possibleCareers'] ?? []),
     );
   }
 
