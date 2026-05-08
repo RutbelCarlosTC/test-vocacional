@@ -3,6 +3,8 @@ import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
 import '../services/evaluation_service.dart';
 import '../services/profile_manager.dart';
+import '../widgets/attempt_detail/podium_widget.dart';
+import '../widgets/attempt_detail/personality_radar_chart.dart';
 import 'result_screen.dart';
 
 class GlobalResultsScreen extends StatefulWidget {
@@ -96,7 +98,6 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Lista de tarjetas para cada área
             Expanded(
               child: ListView(
                 children: EvaluationArea.values.map((area) {
@@ -104,39 +105,10 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
                   final attempt = progress.latestAttempt;
 
                   return Card(
-                    elevation: 1,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      title: Text(
-                        area.label,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: attempt != null
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (area != EvaluationArea.personalidad)
-                                    Text('Afinidad: ${attempt.afinidadPrimaria}',
-                                        style: TextStyle(
-                                            color: Colors.green.shade700,
-                                            fontWeight: FontWeight.w500))
-                                  else
-                                    const Text('Evaluación completada',
-                                        style: TextStyle(
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.w500)),
-                                ],
-                              ),
-                            )
-                          : const Padding(
-                              padding: EdgeInsets.only(top: 6),
-                              child: Text('Aún no evaluado', style: TextStyle(color: Colors.grey)),
-                            ),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    elevation: 2,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    child: InkWell(
                       onTap: () {
                         // Al hacer clic, enviamos al usuario al historial detallado de esa área
                         Navigator.push(
@@ -153,6 +125,43 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
                           _loadData();
                         });
                       },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  area.label,
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                ),
+                                const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            if (attempt == null)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Center(
+                                  child: Text('Aún no evaluado', style: TextStyle(color: Colors.grey)),
+                                ),
+                              )
+                            else if (area == EvaluationArea.preferencias)
+                              PodiumWidget(
+                                attempt: attempt,
+                                onCareerTap: (career) {
+                                  // Opcionalmente podemos navegar al detalle o no hacer nada 
+                                  // ya que el Card entero navega al historial.
+                                },
+                              )
+                            else if (area == EvaluationArea.personalidad)
+                              PersonalityRadarChart(scores: attempt.dimensionScores),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 }).toList(),
