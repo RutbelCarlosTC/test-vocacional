@@ -84,15 +84,6 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    leading: CircleAvatar(
-                      backgroundColor: isInvalid 
-                        ? Colors.red.shade100 
-                        : Theme.of(context).colorScheme.primaryContainer,
-                      child: Icon(
-                        isInvalid ? Icons.warning_amber_rounded : Icons.assignment_turned_in,
-                        color: isInvalid ? Colors.red : Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
                     title: Text(
                       'Intento ${attempt.attemptNumber}',
                       style: const TextStyle(fontWeight: FontWeight.bold),

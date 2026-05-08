@@ -198,6 +198,63 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               ),
               const SizedBox(height: 14),
 
+              const Text(
+                'Posibles Carreras',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 6),
+              const Text('Selecciona hasta 3 carreras de tu interés',
+                  style: TextStyle(fontSize: 13, color: Colors.grey)),
+              const SizedBox(height: 12),
+
+              // Carreras autocompletables
+              ...List.generate(3, (index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Autocomplete<String>(
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<String>.empty();
+                      }
+                      return _allCareers.where((String option) {
+                        return option
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase());
+                      });
+                    },
+                    onSelected: (String selection) {
+                      _careerControllers[index].text = selection;
+                    },
+                    fieldViewBuilder:
+                        (context, controller, focusNode, onFieldSubmitted) {
+                      // Sincronizar con nuestro controlador
+                      controller.text = _careerControllers[index].text;
+                      controller.addListener(() {
+                         _careerControllers[index].text = controller.text;
+                      });
+                      
+                      return TextFormField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          labelText: 'Opción ${index + 1}${index == 0 ? " *" : ""}',
+                          labelStyle: index == 0 ? const TextStyle(color: Colors.black) : null,
+                          prefixIcon: const Icon(Icons.school_outlined),
+                        ),
+                        validator: (v) {
+                          if (index == 0 && (v == null || v.isEmpty)) {
+                            return 'Al menos una carrera es requerida';
+                          }
+                          return null;
+                        },
+                      );
+                    },
+                  ),
+                );
+              }),
+
+              const SizedBox(height: 14),
+
               // Género
               _buildLabel('Género'),
               _GenderSelector(
@@ -259,63 +316,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 onChanged: (val) => setState(() => _schoolType = val!),
               ),
               const SizedBox(height: 14),
-
-              const Text(
-                'Posibles Carreras',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 6),
-              const Text('Selecciona hasta 3 carreras de tu interés',
-                  style: TextStyle(fontSize: 13, color: Colors.grey)),
-              const SizedBox(height: 12),
-
-              // Carreras autocompletables
-              ...List.generate(3, (index) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Autocomplete<String>(
-                    optionsBuilder: (TextEditingValue textEditingValue) {
-                      if (textEditingValue.text == '') {
-                        return const Iterable<String>.empty();
-                      }
-                      return _allCareers.where((String option) {
-                        return option
-                            .toLowerCase()
-                            .contains(textEditingValue.text.toLowerCase());
-                      });
-                    },
-                    onSelected: (String selection) {
-                      _careerControllers[index].text = selection;
-                    },
-                    fieldViewBuilder:
-                        (context, controller, focusNode, onFieldSubmitted) {
-                      // Sincronizar con nuestro controlador
-                      controller.text = _careerControllers[index].text;
-                      controller.addListener(() {
-                         _careerControllers[index].text = controller.text;
-                      });
-                      
-                      return TextFormField(
-                        controller: controller,
-                        focusNode: focusNode,
-                        decoration: InputDecoration(
-                          labelText: 'Opción ${index + 1}${index == 0 ? " *" : ""}',
-                          labelStyle: index == 0 ? const TextStyle(color: Colors.black) : null,
-                          prefixIcon: const Icon(Icons.school_outlined),
-                        ),
-                        validator: (v) {
-                          if (index == 0 && (v == null || v.isEmpty)) {
-                            return 'Al menos una carrera es requerida';
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                );
-              }),
-
-              const SizedBox(height: 20),
 
               // Academic status
               _buildLabel('Estado académico actual'),

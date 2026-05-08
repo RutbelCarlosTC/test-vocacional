@@ -22,20 +22,26 @@ class MacroPieChart extends StatelessWidget {
             flex: 4,
             child: PieChart(
               PieChartData(
-                sectionsSpace: 2,
-                centerSpaceRadius: 40,
+                sectionsSpace: 3,
+                centerSpaceRadius: 44,
                 sections: scores.map((ds) {
                   final double pctValue =
                       total == 0 ? 0 : (ds.score / total) * 100;
+                  final color = _getMacroColor(ds.key);
                   return PieChartSectionData(
-                    color: _getMacroColor(ds.key),
+                    color: color,
                     value: ds.score.toDouble(),
                     title: '${pctValue.toStringAsFixed(0)}%',
-                    radius: 50,
+                    radius: 54,
                     titleStyle: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
+                      shadows: [Shadow(color: Colors.black26, blurRadius: 4)],
+                    ),
+                    borderSide: BorderSide(
+                      color: Colors.white.withOpacity(0.6),
+                      width: 2,
                     ),
                   );
                 }).toList(),
@@ -83,13 +89,13 @@ class MacroPieChart extends StatelessWidget {
   Color _getMacroColor(String key) {
     switch (key.toUpperCase()) {
       case 'FIS':
-        return Colors.blue.shade600;
+        return const Color(0xFF4A90D9); // azul medio, claro y limpio
       case 'BIO':
-        return Colors.green.shade600;
+        return const Color(0xFF4CAF82); // verde esmeralda suave
       case 'SOC':
-        return Colors.orange.shade600;
+        return const Color(0xFFE07B54); // terracota cálido
       default:
-        return Colors.grey;
+        return const Color(0xFFB0BEC5);
     }
   }
 
