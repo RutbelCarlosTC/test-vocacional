@@ -463,7 +463,11 @@ class _QuestionCardState extends State<_QuestionCard> {
             ),
             child: Text(
               widget.question.question,
-              style: const TextStyle(fontSize: 17, height: 1.5),
+              style: TextStyle(
+                fontSize: 17,
+                height: 1.5,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
           ),
           const SizedBox(height: 24),

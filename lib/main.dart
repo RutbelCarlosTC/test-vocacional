@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'theme/app_theme.dart';
 import 'services/profile_manager.dart';
 import 'services/evaluation_service.dart';
 import 'screens/profile_selection_screen.dart';
@@ -18,10 +19,7 @@ class CeprunsaApp extends StatelessWidget {
     return MaterialApp(
       title: 'CEPRUNSA Vocacional',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
       home: const _SplashRouter(),
     );
   }

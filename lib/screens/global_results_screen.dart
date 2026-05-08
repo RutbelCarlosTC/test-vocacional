@@ -79,7 +79,11 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
                   Expanded(
                     child: Text(
                       'Has completado $areasCompletadas de $totalAreas áreas de evaluación.',
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
                     ),
                   ),
                 ],

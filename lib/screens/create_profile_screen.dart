@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/user_profile.dart';
 import '../services/profile_manager.dart';
+import '../theme/app_colors.dart';
 import 'home_screen.dart';
 
 class CreateProfileScreen extends StatefulWidget {
@@ -172,7 +173,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 decoration: const InputDecoration(
                   hintText: 'Ej. Juan Pérez',
                   prefixIcon: Icon(Icons.person_outline),
-                  border: OutlineInputBorder(),
                 ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) => (v == null || v.trim().isEmpty)
@@ -188,7 +188,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 decoration: const InputDecoration(
                   hintText: 'ejemplo@correo.com',
                   prefixIcon: Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (v) {
@@ -215,8 +214,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.accentGray),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
@@ -252,7 +251,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               DropdownButtonFormField<String>(
                 value: _schoolType,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(horizontal: 12),
                 ),
                 items: ['Nacional', 'Parroquial', 'Particular']
@@ -261,21 +259,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 onChanged: (val) => setState(() => _schoolType = val!),
               ),
               const SizedBox(height: 14),
-
-              // Academic status
-              _buildLabel('Estado académico actual'),
-              ...AcademicStatus.values
-                  .map((status) => RadioListTile<AcademicStatus>(
-                        title: Text(status.label),
-                        value: status,
-                        groupValue: _academicStatus,
-                        onChanged: (val) =>
-                            setState(() => _academicStatus = val!),
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                      )),
-
-              const SizedBox(height: 20),
 
               const Text(
                 'Posibles Carreras',
@@ -318,7 +301,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                         decoration: InputDecoration(
                           labelText: 'Opción ${index + 1}${index == 0 ? " *" : ""}',
                           labelStyle: index == 0 ? const TextStyle(color: Colors.black) : null,
-                          border: const OutlineInputBorder(),
                           prefixIcon: const Icon(Icons.school_outlined),
                         ),
                         validator: (v) {
@@ -332,6 +314,21 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   ),
                 );
               }),
+
+              const SizedBox(height: 20),
+
+              // Academic status
+              _buildLabel('Estado académico actual'),
+              ...AcademicStatus.values
+                  .map((status) => RadioListTile<AcademicStatus>(
+                        title: Text(status.label),
+                        value: status,
+                        groupValue: _academicStatus,
+                        onChanged: (val) =>
+                            setState(() => _academicStatus = val!),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      )),
 
               const SizedBox(height: 24),
 
