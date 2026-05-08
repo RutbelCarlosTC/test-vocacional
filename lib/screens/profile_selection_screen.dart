@@ -85,6 +85,13 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/LOGO CEPRUNSA-03.png',
+                      height: 100,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   const Text(
                     '¿Quién está usando la app?',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

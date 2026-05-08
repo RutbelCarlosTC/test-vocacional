@@ -83,6 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(
+              child: Image.asset(
+                'assets/LOGO CEPRUNSA-03.png',
+                height: 100,
+              ),
+            ),
+            const SizedBox(height: 24),
             // Saludo
             _WelcomeBanner(profile: _profile),
             const SizedBox(height: 32),
