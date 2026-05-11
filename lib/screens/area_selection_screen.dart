@@ -44,7 +44,6 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
 
     for (final area in EvaluationArea.values) {
       map[area] = _evalService.getProgress(profile.id, area);
-      // Cargamos las preguntas de esta área específica para obtener el total
       final questions = await _evalService.loadQuestionsForArea(area);
       totals[area] = questions.length;
     }
@@ -62,11 +61,26 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
   }
 
   void _startTour() {
+    TargetPosition? areaPosition;
+    final ctx = _areaKey.currentContext;
+    if (ctx != null) {
+      final box = ctx.findRenderObject() as RenderBox?;
+      if (box != null) {
+        final offset = box.localToGlobal(Offset.zero);
+        final screenWidth = MediaQuery.of(context).size.width;
+        areaPosition = TargetPosition(
+          Size(screenWidth, box.size.height),
+          Offset(0, offset.dy),
+        );
+      }
+    }
+
     TourService.showTour(
       context,
       targets: [
         TourService.createTarget(
           key: _areaKey,
+          targetPosition: areaPosition,
           title: 'Áreas del Test',
           description: 'Aquí verás los diferentes test disponibles. Comenzaremos con el de Preferencias Profesionales.',
         ),
@@ -127,8 +141,7 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
                         key: index == 0 ? _areaKey : null,
                         area: area,
                         progress: _progressMap[area]!,
-                        totalQuestions:
-                            _totalsMap[area] ?? 1, // Pasamos el total aquí
+                        totalQuestions: _totalsMap[area] ?? 1,
                         onStartQuiz: () => _startQuiz(area),
                         onViewResults: () => _viewResults(area),
                       ),
@@ -204,10 +217,7 @@ class _AreaCard extends StatelessWidget {
               const SizedBox(height: 12),
               Builder(
                 builder: (context) {
-                  // Obtenemos la pregunta en la que se quedó (índice + 1)
                   final int currentQuestion = progress.draftLastIndex + 1;
-
-                  // Calculamos el progreso para que coincida con QuizScreen (pregunta actual / total)
                   final double progressValue = totalQuestions > 0
                       ? (currentQuestion / totalQuestions).clamp(0.0, 1.0)
                       : 0.0;
