@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
 import '../services/evaluation_service.dart';
@@ -107,11 +108,30 @@ class _QuizScreenState extends State<QuizScreen>
   }
 
   void _startTour() {
+    // Calculamos la posición real del widget en pantalla para que el foco
+    // no se recorte. tutorial_coach_mark a veces no toma bien el ancho
+    // completo cuando el key está en un container con padding interno.
+    TargetPosition? questionPosition;
+    final ctx = _questionKey.currentContext;
+    if (ctx != null) {
+      final box = ctx.findRenderObject() as RenderBox?;
+      if (box != null) {
+        final offset = box.localToGlobal(Offset.zero);
+        final screenWidth = MediaQuery.of(context).size.width;
+        // Usamos el ancho completo de pantalla para que no se recorte
+        questionPosition = TargetPosition(
+          Size(screenWidth, box.size.height),
+          Offset(0, offset.dy),
+        );
+      }
+    }
+
     TourService.showTour(
       context,
       targets: [
         TourService.createTarget(
           key: _questionKey,
+          targetPosition: questionPosition,
           title: 'La Pregunta',
           description: 'Lee atentamente el enunciado de cada pregunta.',
         ),
@@ -485,7 +505,7 @@ class _QuestionCardState extends State<_QuestionCard> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -493,30 +513,36 @@ class _QuestionCardState extends State<_QuestionCard> {
           Container(
             key: widget.questionKey,
             width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Text(
-              widget.question.question,
-              style: TextStyle(
-                fontSize: 17,
-                height: 1.5,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Text(
+                widget.question.question,
+                style: TextStyle(
+                  fontSize: 17,
+                  height: 1.5,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Selecciona tu respuesta:',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Selecciona tu respuesta:',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
           ),
           const SizedBox(height: 12),
-          // Usamos un SizedBox con ancho infinito para que el foco del tour cubra toda la pantalla
-          SizedBox(
-            width: double.infinity,
+          Container(
             key: widget.optionsKey,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: widget.question.options.asMap().entries.map((entry) {
                 final idx = entry.key;

@@ -19,14 +19,13 @@ class TourService {
         onSkip?.call();
         return true;
       },
-      onClickTarget: (target) {
-        // Acciones opcionales al hacer clic en el objetivo
-      },
+      onClickTarget: (target) {},
     ).show(context: context);
   }
 
   static TargetFocus createTarget({
     required GlobalKey key,
+    TargetPosition? targetPosition, // <-- nuevo parámetro opcional
     required String title,
     required String description,
     ContentAlign align = ContentAlign.bottom,
@@ -34,7 +33,8 @@ class TourService {
   }) {
     return TargetFocus(
       identify: key.toString(),
-      keyTarget: key,
+      keyTarget: targetPosition == null ? key : null, // si hay posición manual, no usar key
+      targetPosition: targetPosition,                 // posición manual toma precedencia
       alignSkip: Alignment.topRight,
       shape: shape,
       contents: [
