@@ -85,8 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Center(
               child: Image.asset(
-                'assets/LOGO CEPRUNSA-03.png',
-                height: 100,
+                'assets/ENRUTAT_LOGO.png',
+                height: 250,
               ),
             ),
             const SizedBox(height: 24),
@@ -127,6 +127,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (_) => const AreaSelectionScreen()),
                 );
               },
+            ),
+            const Spacer(),
+            Center(
+              child: Image.asset(
+                'assets/LOGO CEPRUNSA-03.png',
+                height: 40,
+              ),
             ),
           ],
         ),

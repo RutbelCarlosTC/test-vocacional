@@ -8,16 +8,16 @@ import 'screens/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EvaluationService.init();
-  runApp(const CeprunsaApp());
+  runApp(const EnrutaTApp());
 }
 
-class CeprunsaApp extends StatelessWidget {
-  const CeprunsaApp({super.key});
+class EnrutaTApp extends StatelessWidget {
+  const EnrutaTApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CEPRUNSA Vocacional',
+      title: 'EnrutaT',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const _SplashRouter(),

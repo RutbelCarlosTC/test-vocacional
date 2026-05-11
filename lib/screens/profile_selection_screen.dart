@@ -75,7 +75,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CEPRUNSA – Orientación Vocacional'),
+        title: const Text('EnrutaT'),
         centerTitle: true,
       ),
       body: _loading
@@ -87,8 +87,8 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                 children: [
                   Center(
                     child: Image.asset(
-                      'assets/LOGO CEPRUNSA-03.png',
-                      height: 100,
+                      'assets/ENRUTAT_LOGO.png',
+                      height: 250,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -125,7 +125,14 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                             },
                           ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: Image.asset(
+                      'assets/LOGO CEPRUNSA-03.png',
+                      height: 50,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
