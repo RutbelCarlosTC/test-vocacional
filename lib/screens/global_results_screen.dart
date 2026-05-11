@@ -51,7 +51,7 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
       _loading = false;
     });
 
-    if (!profile.tourShown) {
+    if (!profile.tourResultsShown) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startTour(profile));
     }
   }
@@ -72,7 +72,7 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
   }
 
   Future<void> _markTourAsShown(UserProfile profile) async {
-    final updated = profile.copyWith(tourShown: true);
+    final updated = profile.copyWith(tourResultsShown: true);
     await _profileManager.saveProfile(updated);
   }
 

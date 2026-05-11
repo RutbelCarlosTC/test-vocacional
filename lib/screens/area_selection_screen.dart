@@ -56,7 +56,7 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
       _loading = false;
     });
 
-    if (!profile.tourShown) {
+    if (!profile.tourAreasShown) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startTour());
     }
   }
@@ -68,17 +68,18 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
         TourService.createTarget(
           key: _areaKey,
           title: 'Áreas del Test',
-          description: 'Aquí verás los diferentes test disponibles. Cada uno evalúa aspectos distintos.',
+          description: 'Aquí verás los diferentes test disponibles. Comenzaremos con el de Preferencias Profesionales.',
         ),
       ],
-      onSkip: () => _markTourAsShown(),
+      onFinish: _markTourAsShown,
+      onSkip: _markTourAsShown,
     );
   }
 
   Future<void> _markTourAsShown() async {
     final profile = await _profileManager.getActiveProfile();
     if (profile != null) {
-      final updated = profile.copyWith(tourShown: true);
+      final updated = profile.copyWith(tourAreasShown: true);
       await _profileManager.saveProfile(updated);
     }
   }

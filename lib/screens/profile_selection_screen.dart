@@ -92,14 +92,28 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    '¿Quién está usando la app?',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  const Center(
+                    child: Text(
+                      '¿Quién está usando la app?',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Selecciona tu perfil o crea uno nuevo.',
-                    style: TextStyle(color: Colors.grey),
+                  const Center(
+                    child: Text(
+                      'Selecciona tu perfil o crea uno nuevo.',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _goToCreateProfile,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Crear nuevo perfil'),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Expanded(
@@ -130,15 +144,6 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                     child: Image.asset(
                       'assets/LOGO CEPRUNSA-03.png',
                       height: 50,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _goToCreateProfile,
-                      icon: const Icon(Icons.add),
-                      label: const Text('Crear nuevo perfil'),
                     ),
                   ),
                 ],

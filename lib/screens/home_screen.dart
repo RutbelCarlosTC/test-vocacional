@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _loading = false;
     });
 
-    if (profile != null && !profile.tourShown) {
+    if (profile != null && !profile.tourHomeShown) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startTour());
     }
   }
@@ -56,12 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
           description: 'Aquí podrás ver el progreso y resultados de tus test.',
         ),
       ],
+      onFinish: () => _markTourAsShown(_profile!),
       onSkip: () => _markTourAsShown(_profile!),
     );
   }
 
   Future<void> _markTourAsShown(UserProfile profile) async {
-    final updated = profile.copyWith(tourShown: true);
+    final updated = profile.copyWith(tourHomeShown: true);
     await _manager.saveProfile(updated);
     if (mounted) setState(() => _profile = updated);
   }
@@ -113,67 +114,63 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.asset(
-                'assets/ENRUTAT_LOGO.png',
-                height: 250,
-              ),
+        children: [
+          Center(
+            child: Image.asset(
+              'assets/ENRUTAT_LOGO.png',
+              height: 250,
             ),
-            const SizedBox(height: 24),
-            // Saludo
-            _WelcomeBanner(profile: _profile),
-            const SizedBox(height: 32),
+          ),
+          const SizedBox(height: 24),
+          // Saludo
+          _WelcomeBanner(profile: _profile),
+          const SizedBox(height: 32),
 
-            const Text(
-              '¿Qué deseas hacer?',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
+          const Text(
+            '¿Qué deseas hacer?',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
 
-            // Botón Consultar
-            _MenuCard(
-              key: _resultsKey,
-              icon: Icons.history,
-              title: 'Consultar resultados',
-              subtitle: 'Revisa tus evaluaciones anteriores.',
-              onTap: () {
-                // TODO: navegar a ResultsScreen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const GlobalResultsScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 14),
+          // Botón Evaluar
+          _MenuCard(
+            key: _evalKey,
+            icon: Icons.assignment_outlined,
+            title: 'Realizar evaluación',
+            subtitle: 'Completa un test de orientación vocacional.',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AreaSelectionScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 14),
 
-            // Botón Evaluar
-            _MenuCard(
-              key: _evalKey,
-              icon: Icons.assignment_outlined,
-              title: 'Realizar evaluación',
-              subtitle: 'Completa un test de orientación vocacional.',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const AreaSelectionScreen()),
-                );
-              },
+          // Botón Consultar
+          _MenuCard(
+            key: _resultsKey,
+            icon: Icons.history,
+            title: 'Consultar resultados',
+            subtitle: 'Revisa tus evaluaciones anteriores.',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const GlobalResultsScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 40),
+          Center(
+            child: Image.asset(
+              'assets/LOGO CEPRUNSA-03.png',
+              height: 40,
             ),
-            const Spacer(),
-            Center(
-              child: Image.asset(
-                'assets/LOGO CEPRUNSA-03.png',
-                height: 40,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

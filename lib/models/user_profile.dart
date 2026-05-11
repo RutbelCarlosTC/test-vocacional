@@ -50,7 +50,10 @@ class UserProfile {
   final AcademicStatus academicStatus;
   final String schoolType; // Nacional, Parroquial, Particular
   final List<String> possibleCareers; // 3 opciones
-  final bool tourShown;
+  final bool tourHomeShown;
+  final bool tourAreasShown;
+  final bool tourQuizShown;
+  final bool tourResultsShown;
 
   UserProfile({
     required this.id,
@@ -61,7 +64,10 @@ class UserProfile {
     required this.academicStatus,
     required this.schoolType,
     required this.possibleCareers,
-    this.tourShown = false,
+    this.tourHomeShown = false,
+    this.tourAreasShown = false,
+    this.tourQuizShown = false,
+    this.tourResultsShown = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -74,7 +80,10 @@ class UserProfile {
       'academicStatus': academicStatus.value,
       'schoolType': schoolType,
       'possibleCareers': possibleCareers,
-      'tourShown': tourShown,
+      'tourHomeShown': tourHomeShown,
+      'tourAreasShown': tourAreasShown,
+      'tourQuizShown': tourQuizShown,
+      'tourResultsShown': tourResultsShown,
     };
   }
 
@@ -88,7 +97,10 @@ class UserProfile {
       academicStatus: AcademicStatusExtension.fromValue(map['academicStatus']),
       schoolType: map['schoolType'] ?? 'Nacional',
       possibleCareers: List<String>.from(map['possibleCareers'] ?? []),
-      tourShown: map['tourShown'] ?? false,
+      tourHomeShown: map['tourHomeShown'] ?? map['tourShown'] ?? false,
+      tourAreasShown: map['tourAreasShown'] ?? map['tourShown'] ?? false,
+      tourQuizShown: map['tourQuizShown'] ?? map['tourShown'] ?? false,
+      tourResultsShown: map['tourResultsShown'] ?? map['tourShown'] ?? false,
     );
   }
 
@@ -101,7 +113,10 @@ class UserProfile {
     AcademicStatus? academicStatus,
     String? schoolType,
     List<String>? possibleCareers,
-    bool? tourShown,
+    bool? tourHomeShown,
+    bool? tourAreasShown,
+    bool? tourQuizShown,
+    bool? tourResultsShown,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -112,7 +127,10 @@ class UserProfile {
       academicStatus: academicStatus ?? this.academicStatus,
       schoolType: schoolType ?? this.schoolType,
       possibleCareers: possibleCareers ?? this.possibleCareers,
-      tourShown: tourShown ?? this.tourShown,
+      tourHomeShown: tourHomeShown ?? this.tourHomeShown,
+      tourAreasShown: tourAreasShown ?? this.tourAreasShown,
+      tourQuizShown: tourQuizShown ?? this.tourQuizShown,
+      tourResultsShown: tourResultsShown ?? this.tourResultsShown,
     );
   }
 
