@@ -50,6 +50,7 @@ class UserProfile {
   final AcademicStatus academicStatus;
   final String schoolType; // Nacional, Parroquial, Particular
   final List<String> possibleCareers; // 3 opciones
+  final bool tourShown;
 
   UserProfile({
     required this.id,
@@ -60,6 +61,7 @@ class UserProfile {
     required this.academicStatus,
     required this.schoolType,
     required this.possibleCareers,
+    this.tourShown = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -72,6 +74,7 @@ class UserProfile {
       'academicStatus': academicStatus.value,
       'schoolType': schoolType,
       'possibleCareers': possibleCareers,
+      'tourShown': tourShown,
     };
   }
 
@@ -85,6 +88,31 @@ class UserProfile {
       academicStatus: AcademicStatusExtension.fromValue(map['academicStatus']),
       schoolType: map['schoolType'] ?? 'Nacional',
       possibleCareers: List<String>.from(map['possibleCareers'] ?? []),
+      tourShown: map['tourShown'] ?? false,
+    );
+  }
+
+  UserProfile copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? gender,
+    DateTime? birthDate,
+    AcademicStatus? academicStatus,
+    String? schoolType,
+    List<String>? possibleCareers,
+    bool? tourShown,
+  }) {
+    return UserProfile(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      gender: gender ?? this.gender,
+      birthDate: birthDate ?? this.birthDate,
+      academicStatus: academicStatus ?? this.academicStatus,
+      schoolType: schoolType ?? this.schoolType,
+      possibleCareers: possibleCareers ?? this.possibleCareers,
+      tourShown: tourShown ?? this.tourShown,
     );
   }
 

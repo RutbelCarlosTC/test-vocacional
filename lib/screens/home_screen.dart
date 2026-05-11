@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../models/user_profile.dart';
 import '../services/profile_manager.dart';
+import '../services/tour_service.dart';
 import 'profile_selection_screen.dart';
 import 'area_selection_screen.dart';
 import 'global_results_screen.dart';
@@ -17,6 +19,10 @@ class _HomeScreenState extends State<HomeScreen> {
   UserProfile? _profile;
   bool _loading = true;
 
+  // Keys para el tour
+  final GlobalKey _evalKey = GlobalKey();
+  final GlobalKey _resultsKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +35,35 @@ class _HomeScreenState extends State<HomeScreen> {
       _profile = profile;
       _loading = false;
     });
+
+    if (profile != null && !profile.tourShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startTour());
+    }
+  }
+
+  void _startTour() {
+    TourService.showTour(
+      context,
+      targets: [
+        TourService.createTarget(
+          key: _evalKey,
+          title: 'Realizar Evaluación',
+          description: 'Presiona aquí para comenzar tus test vocacionales.',
+        ),
+        TourService.createTarget(
+          key: _resultsKey,
+          title: 'Tus Resultados',
+          description: 'Aquí podrás ver el progreso y resultados de tus test.',
+        ),
+      ],
+      onSkip: () => _markTourAsShown(_profile!),
+    );
+  }
+
+  Future<void> _markTourAsShown(UserProfile profile) async {
+    final updated = profile.copyWith(tourShown: true);
+    await _manager.saveProfile(updated);
+    if (mounted) setState(() => _profile = updated);
   }
 
   Future<void> _logout() async {
@@ -102,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Botón Consultar
             _MenuCard(
+              key: _resultsKey,
               icon: Icons.history,
               title: 'Consultar resultados',
               subtitle: 'Revisa tus evaluaciones anteriores.',
@@ -117,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Botón Evaluar
             _MenuCard(
+              key: _evalKey,
               icon: Icons.assignment_outlined,
               title: 'Realizar evaluación',
               subtitle: 'Completa un test de orientación vocacional.',
@@ -212,6 +249,7 @@ class _MenuCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const _MenuCard({
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
 import '../services/evaluation_service.dart';
+import '../services/profile_manager.dart';
+import '../services/tour_service.dart';
 import 'result_screen.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -31,6 +33,10 @@ class _QuizScreenState extends State<QuizScreen>
   late AnimationController _animController;
   late Animation<Offset> _slideIn;
   late Animation<double> _fadeIn;
+
+  // Keys para el tour
+  final GlobalKey _questionKey = GlobalKey();
+  final GlobalKey _optionsKey = GlobalKey();
 
   @override
   void initState() {
@@ -90,6 +96,39 @@ class _QuizScreenState extends State<QuizScreen>
       _loading = false;
     });
     _animController.forward(from: 0);
+
+    // Tour
+    final profile = await ProfileManager().getActiveProfile();
+    if (profile != null && !profile.tourShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startTour());
+    }
+  }
+
+  void _startTour() {
+    TourService.showTour(
+      context,
+      targets: [
+        TourService.createTarget(
+          key: _questionKey,
+          title: 'La Pregunta',
+          description: 'Lee atentamente el enunciado de cada pregunta.',
+        ),
+        TourService.createTarget(
+          key: _optionsKey,
+          title: 'Opciones de Respuesta',
+          description: 'Elige la opción que mejor se identifique contigo.',
+        ),
+      ],
+      onSkip: () => _markTourAsShown(),
+    );
+  }
+
+  Future<void> _markTourAsShown() async {
+    final profile = await ProfileManager().getActiveProfile();
+    if (profile != null) {
+      final updated = profile.copyWith(tourShown: true);
+      await ProfileManager().saveProfile(updated);
+    }
   }
 
   void _selectAnswer(OptionModel option) {
@@ -300,6 +339,8 @@ class _QuizScreenState extends State<QuizScreen>
                     questionNumber: _currentIndex + 1,
                     onAnswer: _selectAnswer,
                     initialOption: _selectedOption,
+                    questionKey: _questionKey,
+                    optionsKey: _optionsKey,
                   ),
                 ),
               ),
@@ -419,6 +460,8 @@ class _QuestionCard extends StatefulWidget {
   final int questionNumber;
   final void Function(OptionModel) onAnswer;
   final OptionModel? initialOption;
+  final GlobalKey? questionKey;
+  final GlobalKey? optionsKey;
 
   const _QuestionCard({
     super.key,
@@ -426,6 +469,8 @@ class _QuestionCard extends StatefulWidget {
     required this.questionNumber,
     required this.onAnswer,
     this.initialOption,
+    this.questionKey,
+    this.optionsKey,
   });
 
   @override
@@ -455,6 +500,7 @@ class _QuestionCardState extends State<_QuestionCard> {
         children: [
           const SizedBox(height: 8),
           Container(
+            key: widget.questionKey,
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -476,23 +522,26 @@ class _QuestionCardState extends State<_QuestionCard> {
             style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
           const SizedBox(height: 12),
-          ...widget.question.options.asMap().entries.map((entry) {
-            final idx = entry.key;
-            final option = entry.value;
-            final isSelected = _selectedIndex == idx;
+          Column(
+            key: widget.optionsKey,
+            children: widget.question.options.asMap().entries.map((entry) {
+              final idx = entry.key;
+              final option = entry.value;
+              final isSelected = _selectedIndex == idx;
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: _OptionTile(
-                text: option.text,
-                isSelected: isSelected,
-                onTap: () {
-                  setState(() => _selectedIndex = idx);
-                  widget.onAnswer(option);
-                },
-              ),
-            );
-          }),
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: _OptionTile(
+                  text: option.text,
+                  isSelected: isSelected,
+                  onTap: () {
+                    setState(() => _selectedIndex = idx);
+                    widget.onAnswer(option);
+                  },
+                ),
+              );
+            }).toList(),
+          ),
         ],
       ),
     );

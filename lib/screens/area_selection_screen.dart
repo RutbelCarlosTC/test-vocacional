@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
 import '../services/evaluation_service.dart';
 import '../services/profile_manager.dart';
+import '../services/tour_service.dart';
 import 'quiz_screen.dart';
 import 'result_screen.dart';
 
@@ -19,6 +21,9 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
 
   String? _profileId;
   bool _loading = true;
+
+  // Keys para el tour
+  final GlobalKey _areaKey = GlobalKey();
 
   // Progress de cada área
   final Map<EvaluationArea, AreaProgress> _progressMap = {};
@@ -50,6 +55,32 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
       _totalsMap.addAll(totals);
       _loading = false;
     });
+
+    if (!profile.tourShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startTour());
+    }
+  }
+
+  void _startTour() {
+    TourService.showTour(
+      context,
+      targets: [
+        TourService.createTarget(
+          key: _areaKey,
+          title: 'Áreas del Test',
+          description: 'Aquí verás los diferentes test disponibles. Cada uno evalúa aspectos distintos.',
+        ),
+      ],
+      onSkip: () => _markTourAsShown(),
+    );
+  }
+
+  Future<void> _markTourAsShown() async {
+    final profile = await _profileManager.getActiveProfile();
+    if (profile != null) {
+      final updated = profile.copyWith(tourShown: true);
+      await _profileManager.saveProfile(updated);
+    }
   }
 
   Future<void> _startQuiz(EvaluationArea area) async {
@@ -87,17 +118,21 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
                 ),
                 const SizedBox(height: 16),
                 ...EvaluationArea.values.map(
-                  (area) => Padding(
-                    padding: const EdgeInsets.only(bottom: 14),
-                    child: _AreaCard(
-                      area: area,
-                      progress: _progressMap[area]!,
-                      totalQuestions:
-                          _totalsMap[area] ?? 1, // Pasamos el total aquí
-                      onStartQuiz: () => _startQuiz(area),
-                      onViewResults: () => _viewResults(area),
-                    ),
-                  ),
+                  (area) {
+                    final index = EvaluationArea.values.indexOf(area);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 14),
+                      child: _AreaCard(
+                        key: index == 0 ? _areaKey : null,
+                        area: area,
+                        progress: _progressMap[area]!,
+                        totalQuestions:
+                            _totalsMap[area] ?? 1, // Pasamos el total aquí
+                        onStartQuiz: () => _startQuiz(area),
+                        onViewResults: () => _viewResults(area),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -116,6 +151,7 @@ class _AreaCard extends StatelessWidget {
   final VoidCallback onViewResults;
 
   const _AreaCard({
+    super.key,
     required this.area,
     required this.progress,
     required this.totalQuestions,
