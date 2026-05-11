@@ -4,6 +4,7 @@ import 'services/profile_manager.dart';
 import 'services/evaluation_service.dart';
 import 'screens/profile_selection_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +42,20 @@ class _SplashRouterState extends State<_SplashRouter> {
   }
 
   Future<void> _redirect() async {
-    final hasSession = await ProfileManager().hasActiveSession();
+    final manager = ProfileManager();
+    final showOnboarding = await manager.shouldShowOnboarding();
+    
+    if (!mounted) return;
+
+    if (showOnboarding) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+      );
+      return;
+    }
+
+    final hasSession = await manager.hasActiveSession();
     if (!mounted) return;
     Navigator.pushReplacement(
       context,

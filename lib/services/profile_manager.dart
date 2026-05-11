@@ -5,11 +5,24 @@ import '../models/user_profile.dart';
 class ProfileManager {
   static const String _profilesKey = 'profiles';
   static const String _activeProfileKey = 'active_profile_id';
+  static const String _onboardingKey = 'onboarding_shown';
 
   // Singleton
   static final ProfileManager _instance = ProfileManager._internal();
   factory ProfileManager() => _instance;
   ProfileManager._internal();
+
+  // ---------- Onboarding ----------
+
+  Future<bool> shouldShowOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    return !(prefs.getBool(_onboardingKey) ?? false);
+  }
+
+  Future<void> setOnboardingShown() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_onboardingKey, true);
+  }
 
   // ---------- Perfiles ----------
 
