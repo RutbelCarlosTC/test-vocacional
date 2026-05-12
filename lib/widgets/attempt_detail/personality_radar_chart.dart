@@ -80,9 +80,9 @@ class PersonalityRadarChart extends StatelessWidget {
                   radarBorderData:
                       const BorderSide(color: Colors.transparent),
                   radarShape: RadarShape.polygon,
-                  titlePositionPercentageOffset: 0.22,
+                  titlePositionPercentageOffset: 0.25,
                   titleTextStyle: const TextStyle(
-                    fontSize: 9,
+                    fontSize: 10.5,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
@@ -155,47 +155,37 @@ class _RadarOverlayPainter extends CustomPainter {
     final count = scores.length;
     final radarRadius = size.shortestSide * 0.75 / 2;
 
-    // ── 1. Etiquetas de escala en el lado base (entre vértice 2 y vértice 3) ──
-    // El lado base es el inferior del pentágono: entre índice 2 y 3.
-    // Calculamos el punto medio de ese lado para cada anillo de escala.
+    // ── 1. Etiquetas de escala en el eje superior (punta del pentágono) ──
+    final angleTop = -pi / 2; // Ángulo de la punta (vértice 0)
+    
     for (final label in scaleLabels) {
       final ratio = label / maxValue;
       final ringRadius = radarRadius * ratio;
 
-      final angle2 = -pi / 2 + (2 * pi / count) * 2; // vértice 2
-      final angle3 = -pi / 2 + (2 * pi / count) * 3; // vértice 3
-
-      final v2 = Offset(
-        center.dx + ringRadius * cos(angle2),
-        center.dy + ringRadius * sin(angle2),
+      // Posición en el eje vertical
+      final point = Offset(
+        center.dx + ringRadius * cos(angleTop),
+        center.dy + ringRadius * sin(angleTop),
       );
-      final v3 = Offset(
-        center.dx + ringRadius * cos(angle3),
-        center.dy + ringRadius * sin(angle3),
-      );
-
-      // Punto medio del lado base
-      final midPoint = Offset((v2.dx + v3.dx) / 2, (v2.dy + v3.dy) / 2);
 
       final textPainter = TextPainter(
         text: TextSpan(
           text: '$label',
-          style: const TextStyle(
-            fontSize: 8,
-            fontWeight: FontWeight.w500,
-            color: Color(0x99757575), // gris sutil con 60% de opacidad
+          style: TextStyle(
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey.shade700, // Un gris más oscuro para mejor lectura
           ),
         ),
         textDirection: TextDirection.ltr,
-        textAlign: TextAlign.center,
       )..layout();
 
-      // Centrar horizontalmente sobre el punto medio, ligeramente arriba del lado
+      // Centradas horizontalmente y posicionadas con un margen superior mayor sobre cada nivel (5, 10, 15)
       textPainter.paint(
         canvas,
         Offset(
-          midPoint.dx - textPainter.width / 2,
-          midPoint.dy - textPainter.height - 2, // 2px sobre el lado
+          point.dx - textPainter.width / 2,
+          point.dy - 10, // Elevamos los números un poco más para que queden más despejados hacia la punta
         ),
       );
     }
