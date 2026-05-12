@@ -14,11 +14,9 @@ class PersonalityRadarChart extends StatelessWidget {
     Colors.teal,
     Colors.indigo,
     Colors.pink,
-    Color(0xFFE65100), // amber.shade800
+    Color(0xFFE65100),
   ];
 
-  /// Calcula las coordenadas de cada vértice del polígono regular,
-  /// igual que fl_chart: empieza arriba (-π/2) y gira en sentido horario.
   List<Offset> _computeVertices({
     required Offset center,
     required double radius,
@@ -33,40 +31,46 @@ class PersonalityRadarChart extends StatelessWidget {
     });
   }
 
+  String _formatLabel(String label) {
+    const breaks = {
+      'Aprendizaje Colaborativo': 'Aprendizaje\nColaborativo',
+      'Resiliencia y Manejo del Estrés': 'Resiliencia y\nManejo de Estrés',
+      'Disciplina Académica': 'Disciplina\nAcadémica',
+    };
+    return breaks[label] ?? label;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (scores.isEmpty) return const SizedBox();
 
     return Container(
-      height: 320,
+      height: 340,
       margin: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final size = Size(constraints.maxWidth, 320);
+          final size = Size(constraints.maxWidth, 340);
 
           return Stack(
             alignment: Alignment.center,
             children: [
-              // ── Gráfico base (SIN datasets de puntos individuales) ──
               RadarChart(
                 RadarChartData(
                   dataSets: [
-                    // Anillos de escala
                     ...[5.0, 10.0, 15.0].map((val) => RadarDataSet(
-                      fillColor: Colors.transparent,
-                      borderColor: Colors.grey.withOpacity(0.2),
-                      borderWidth: 1,
-                      entryRadius: 0,
-                      dataEntries: List.generate(
-                          scores.length, (_) => RadarEntry(value: val)),
-                    )),
-
-                    // Área de resultados principal
+                          fillColor: Colors.transparent,
+                          borderColor: Colors.grey.withOpacity(0.2),
+                          borderWidth: 1,
+                          entryRadius: 0,
+                          dataEntries: List.generate(
+                              scores.length, (_) => RadarEntry(value: val)),
+                        )),
                     RadarDataSet(
                       fillColor: Colors.blue.withOpacity(0.15),
                       borderColor: Colors.blue.shade700,
                       borderWidth: 2.5,
-                      entryRadius: 0, // sin puntos nativos
+                      entryRadius: 0,
                       dataEntries: scores
                           .map((s) => RadarEntry(value: s.score.toDouble()))
                           .toList(),
@@ -74,11 +78,11 @@ class PersonalityRadarChart extends StatelessWidget {
                   ],
                   radarBackgroundColor: Colors.transparent,
                   radarBorderData:
-                  const BorderSide(color: Colors.transparent),
+                      const BorderSide(color: Colors.transparent),
                   radarShape: RadarShape.polygon,
                   titlePositionPercentageOffset: 0.22,
                   titleTextStyle: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 9,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
@@ -87,8 +91,12 @@ class PersonalityRadarChart extends StatelessWidget {
                       return const RadarChartTitle(text: '');
                     }
                     final s = scores[index];
+                    final offset = (index == 1 || index == 4) ? 0.10 : 0.15;
                     return RadarChartTitle(
-                      text: '${s.label}\n${s.score.toInt()} (${s.level})',
+                      text:
+                          '${_formatLabel(s.label)}\n${s.score.toInt()} (${s.level})',
+                      angle: 0,
+                      positionPercentageOffset: offset,
                     );
                   },
                   tickCount: 3,
@@ -99,17 +107,17 @@ class PersonalityRadarChart extends StatelessWidget {
                 ),
               ),
 
-              // ── Puntos de color sobre los vértices del polígono exterior ──
+              // Painter unificado: puntos de vértice + etiquetas de escala
               CustomPaint(
                 size: size,
-                painter: _VertexDotsPainter(
+                painter: _RadarOverlayPainter(
                   scores: scores,
                   colors: _vertexColors,
                   maxValue: 15.0,
+                  scaleLabels: const [5, 10, 15],
                 ),
               ),
 
-              // Máscara central
               Container(
                 width: 45,
                 height: 45,
@@ -128,54 +136,95 @@ class PersonalityRadarChart extends StatelessWidget {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-class _VertexDotsPainter extends CustomPainter {
+class _RadarOverlayPainter extends CustomPainter {
   final List<DimensionScore> scores;
   final List<Color> colors;
   final double maxValue;
+  final List<int> scaleLabels;
 
-  _VertexDotsPainter({
+  _RadarOverlayPainter({
     required this.scores,
     required this.colors,
     required this.maxValue,
+    required this.scaleLabels,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final count = scores.length;
-
-    // Radio máximo del radar.
-    // fl_chart usa aprox. el 75 % del semi-ancho menor del contenedor.
     final radarRadius = size.shortestSide * 0.75 / 2;
 
+    // ── 1. Etiquetas de escala en el lado base (entre vértice 2 y vértice 3) ──
+    // El lado base es el inferior del pentágono: entre índice 2 y 3.
+    // Calculamos el punto medio de ese lado para cada anillo de escala.
+    for (final label in scaleLabels) {
+      final ratio = label / maxValue;
+      final ringRadius = radarRadius * ratio;
+
+      final angle2 = -pi / 2 + (2 * pi / count) * 2; // vértice 2
+      final angle3 = -pi / 2 + (2 * pi / count) * 3; // vértice 3
+
+      final v2 = Offset(
+        center.dx + ringRadius * cos(angle2),
+        center.dy + ringRadius * sin(angle2),
+      );
+      final v3 = Offset(
+        center.dx + ringRadius * cos(angle3),
+        center.dy + ringRadius * sin(angle3),
+      );
+
+      // Punto medio del lado base
+      final midPoint = Offset((v2.dx + v3.dx) / 2, (v2.dy + v3.dy) / 2);
+
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: '$label',
+          style: const TextStyle(
+            fontSize: 8,
+            fontWeight: FontWeight.w500,
+            color: Color(0x99757575), // gris sutil con 60% de opacidad
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center,
+      )..layout();
+
+      // Centrar horizontalmente sobre el punto medio, ligeramente arriba del lado
+      textPainter.paint(
+        canvas,
+        Offset(
+          midPoint.dx - textPainter.width / 2,
+          midPoint.dy - textPainter.height - 2, // 2px sobre el lado
+        ),
+      );
+    }
+
+    // ── 2. Puntos de color sobre los vértices ──
     for (int i = 0; i < count; i++) {
       final angle = -pi / 2 + (2 * pi / count) * i;
       final ratio = scores[i].score / maxValue;
 
-      // Posición del vértice real (según el score del usuario)
       final vertex = Offset(
         center.dx + radarRadius * ratio * cos(angle),
         center.dy + radarRadius * ratio * sin(angle),
       );
 
       final color = colors[i % colors.length];
-      final paint = Paint()
-        ..color = color
-        ..style = PaintingStyle.fill;
 
-      canvas.drawCircle(vertex, 6, paint);
-
-      // Borde blanco para destacar el punto
-      final border = Paint()
-        ..color = Colors.white
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2;
-
-      canvas.drawCircle(vertex, 6, border);
+      canvas.drawCircle(vertex, 6, Paint()..color = color);
+      canvas.drawCircle(
+        vertex,
+        6,
+        Paint()
+          ..color = Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
     }
   }
 
   @override
-  bool shouldRepaint(_VertexDotsPainter old) =>
+  bool shouldRepaint(_RadarOverlayPainter old) =>
       old.scores != scores || old.maxValue != maxValue;
 }

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../models/question_model.dart';
 import '../models/evaluation_result.dart';
-import '../models/user_profile.dart';
 import '../services/evaluation_service.dart';
 import '../services/profile_manager.dart';
-import '../services/tour_service.dart';
 import '../widgets/attempt_detail/podium_widget.dart';
 import '../widgets/attempt_detail/personality_radar_chart.dart';
 import 'result_screen.dart';
@@ -23,9 +20,6 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
 
   bool _loading = true;
   String? _profileId;
-  
-  // Keys para el tour
-  final GlobalKey _summaryKey = GlobalKey();
 
   // Guardamos el progreso de todas las áreas
   final Map<EvaluationArea, AreaProgress> _progressMap = {};
@@ -50,30 +44,6 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
       _progressMap.addAll(map);
       _loading = false;
     });
-
-    if (!profile.tourResultsShown) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _startTour(profile));
-    }
-  }
-
-  void _startTour(UserProfile profile) {
-    TourService.showTour(
-      context,
-      targets: [
-        TourService.createTarget(
-          key: _summaryKey,
-          title: 'Resumen Global',
-          description: 'Aquí verás un resumen de cuánto has avanzado en total.',
-        ),
-      ],
-      onFinish: () => _markTourAsShown(profile),
-      onSkip: () => _markTourAsShown(profile),
-    );
-  }
-
-  Future<void> _markTourAsShown(UserProfile profile) async {
-    final updated = profile.copyWith(tourResultsShown: true);
-    await _profileManager.saveProfile(updated);
   }
 
   @override
@@ -99,7 +69,6 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
           children: [
             // Resumen global superior
             Container(
-              key: _summaryKey,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
@@ -189,7 +158,24 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
                                 },
                               )
                             else if (area == EvaluationArea.personalidad)
-                              PersonalityRadarChart(scores: attempt.dimensionScores),
+                              Builder(builder: (context) {
+                                final sortedScores = List<DimensionScore>.from(attempt.dimensionScores);
+                                const order = [
+                                  'Resiliencia y Manejo del Estrés',
+                                  'Disciplina Académica',
+                                  'Curiosidad Intelectual',
+                                  'Liderazgo y Sociabilidad',
+                                  'Aprendizaje Colaborativo',
+                                ];
+                                sortedScores.sort((a, b) {
+                                  int idxA = order.indexOf(a.label);
+                                  int idxB = order.indexOf(b.label);
+                                  if (idxA == -1) idxA = 99;
+                                  if (idxB == -1) idxB = 99;
+                                  return idxA.compareTo(idxB);
+                                });
+                                return PersonalityRadarChart(scores: sortedScores);
+                              }),
                           ],
                         ),
                       ),

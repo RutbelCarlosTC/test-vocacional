@@ -186,7 +186,7 @@ class EvaluationService {
       scoresByDim[dim] = (scoresByDim[dim] ?? 0) + ans.value;
     }
 
-    return scoresByDim.entries.map((e) {
+    final List<DimensionScore> dimensionScores = scoresByDim.entries.map((e) {
       final dimKey = e.key;
       final score = e.value;
       
@@ -203,6 +203,25 @@ class EvaluationService {
         level: level,
       );
     }).toList();
+
+    // Orden específico solicitado: Resiliencia primero, luego Disciplina Académica
+    const order = [
+      'Resiliencia y Manejo del Estrés',
+      'Disciplina Académica',
+      'Curiosidad Intelectual',
+      'Liderazgo y Sociabilidad',
+      'Aprendizaje Colaborativo',
+    ];
+
+    dimensionScores.sort((a, b) {
+      int idxA = order.indexOf(a.label);
+      int idxB = order.indexOf(b.label);
+      if (idxA == -1) idxA = 99;
+      if (idxB == -1) idxB = 99;
+      return idxA.compareTo(idxB);
+    });
+
+    return dimensionScores;
   }
 
   List<DimensionScore> _calcDimensionScores(

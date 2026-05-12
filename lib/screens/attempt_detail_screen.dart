@@ -151,18 +151,43 @@ class _AttemptDetailScreenState extends State<AttemptDetailScreen> {
                           ),
                         ),
                       ] else if (widget.area == EvaluationArea.personalidad) ...[
-                        PersonalityRadarChart(scores: attempt.dimensionScores),
-                        const SizedBox(height: 32),
-                        const Text(
-                          'Consejos Personalizados',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 16),
-                        AdviceBoxes(
-                          scores: attempt.dimensionScores,
-                          personalityAdvice: _personalityAdvice,
-                        ),
+                        Builder(builder: (context) {
+                          // Forzamos el orden para que coincida con lo solicitado (incluso para intentos previos)
+                          final sortedScores = List<DimensionScore>.from(attempt.dimensionScores);
+                          const order = [
+                            'Resiliencia y Manejo del Estrés',
+                            'Disciplina Académica',
+                            'Curiosidad Intelectual',
+                            'Liderazgo y Sociabilidad',
+                            'Aprendizaje Colaborativo',
+                          ];
+                          sortedScores.sort((a, b) {
+                            int idxA = order.indexOf(a.label);
+                            int idxB = order.indexOf(b.label);
+                            // Si alguna no está en la lista (por si acaso), la mandamos al final
+                            if (idxA == -1) idxA = 99;
+                            if (idxB == -1) idxB = 99;
+                            return idxA.compareTo(idxB);
+                          });
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              PersonalityRadarChart(scores: sortedScores),
+                              const SizedBox(height: 32),
+                              const Text(
+                                'Consejos Personalizados',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              const SizedBox(height: 16),
+                              AdviceBoxes(
+                                scores: sortedScores,
+                                personalityAdvice: _personalityAdvice,
+                              ),
+                            ],
+                          );
+                        }),
                       ] else
                         ...attempt.dimensionScores.map((ds) {
                           return Padding(
