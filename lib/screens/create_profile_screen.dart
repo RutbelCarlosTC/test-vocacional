@@ -70,6 +70,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       firstDate: DateTime(now.year - 60),
       lastDate: DateTime(now.year - 10),
       helpText: 'Selecciona tu fecha de nacimiento',
+      locale: const Locale('es', 'ES'),
     );
     if (picked != null) {
       setState(() => _birthDate = picked);

@@ -250,8 +250,28 @@ class _AttemptDetailScreenState extends State<AttemptDetailScreen> {
                     ],
                   ],
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 20),
                 ],
+              ),
+            ),
+      bottomNavigationBar: _loadingData
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                child: ElevatedButton.icon(
+                  onPressed: () =>
+                      Navigator.of(context).popUntil((route) => route.isFirst),
+                  icon: const Icon(Icons.home),
+                  label: const Text('VOLVER AL INICIO'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
               ),
             ),
     );

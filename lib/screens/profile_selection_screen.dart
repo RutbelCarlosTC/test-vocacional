@@ -80,69 +80,70 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : ListView(
+          : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
-              children: [
-                Center(
-                  child: Image.asset(
-                    'assets/ENRUTAT_LOGO.png',
-                    height: 250,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/ENRUTAT_LOGO.png',
+                      height: 200,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                const Center(
-                  child: Text(
+                  const SizedBox(height: 24),
+                  const Text(
                     '¿Quién está usando la app?',
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-                const SizedBox(height: 8),
-                const Center(
-                  child: Text(
+                  const SizedBox(height: 8),
+                  const Text(
                     'Selecciona tu perfil o crea uno nuevo.',
+                    textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey),
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
                     onPressed: _goToCreateProfile,
                     icon: const Icon(Icons.add),
                     label: const Text('Crear nuevo perfil'),
                   ),
-                ),
-                const SizedBox(height: 20),
-                if (_profiles.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40),
-                    child: Center(
-                      child: Text(
-                        'No hay perfiles aún.\nCrea uno para comenzar.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  )
-                else
-                  ..._profiles.map(
-                    (profile) => Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _ProfileCard(
-                        profile: profile,
-                        onTap: () => _selectProfile(profile),
-                        onDelete: () => _confirmDelete(profile),
-                      ),
+                  const SizedBox(height: 24),
+                  _profiles.isEmpty
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: Text(
+                            'No hay perfiles aún.\nCrea uno para comenzar.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        )
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _profiles.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 10),
+                          itemBuilder: (_, i) {
+                            final profile = _profiles[i];
+                            return _ProfileCard(
+                              profile: profile,
+                              onTap: () => _selectProfile(profile),
+                              onDelete: () => _confirmDelete(profile),
+                            );
+                          },
+                        ),
+                  const SizedBox(height: 40),
+                  Center(
+                    child: Image.asset(
+                      'assets/LOGO CEPRUNSA-03.png',
+                      height: 50,
                     ),
                   ),
-                const SizedBox(height: 20),
-                Center(
-                  child: Image.asset(
-                    'assets/LOGO CEPRUNSA-03.png',
-                    height: 50,
-                  ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
     );
   }

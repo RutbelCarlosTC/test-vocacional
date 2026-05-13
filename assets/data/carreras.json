@@ -122,5 +122,61 @@
   {
     "carrera": "Ingeniería de Minas",
     "descripcion": "Especializada en la extracción de recursos minerales de la corteza terrestre mediante técnicas seguras, eficientes y responsables."
+  },
+  {
+    "carrera": "Ingeniería Industrial",
+    "descripcion": "Optimiza sistemas de producción y servicios mediante la gestión de recursos humanos, técnicos e informativos para mejorar la competitividad."
+  },
+  {
+    "carrera": "Ingeniería Eléctrica",
+    "descripcion": "Se encarga del diseño y mantenimiento de sistemas de generación, transmisión y distribución de energía eléctrica a gran escala."
+  },
+  {
+    "carrera": "Ingeniería Electrónica",
+    "electronics": "Desarrolla circuitos y sistemas electrónicos para el procesamiento de señales, automatización industrial y control de telecomunicaciones."
+  },
+  {
+    "carrera": "Ingeniería Geofísica",
+    "descripcion": "Aplica principios físicos para el estudio de la estructura terrestre, la prospección de recursos y la evaluación de riesgos sísmicos."
+  },
+  {
+    "carrera": "Ingeniería Metalúrgica",
+    "descripcion": "Transforma los minerales en metales y aleaciones, optimizando procesos de extracción y tratamiento de materiales metálicos."
+  },
+  {
+    "carrera": "Ingeniería de Materiales",
+    "descripcion": "Investiga y desarrolla nuevos materiales con propiedades específicas para aplicaciones tecnológicas, industriales y biomédicas."
+  },
+  {
+    "carrera": "Ingeniería de Telecomunicaciones",
+    "descripcion": "Diseña y gestiona infraestructuras de red para la transmisión de datos, voz y video a través de medios satelitales, fibra óptica y radio."
+  },
+  {
+    "carrera": "Ingeniería Ambiental",
+    "descripcion": "Propone soluciones tecnológicas para prevenir y mitigar el impacto humano en el ecosistema, gestionando residuos y recursos naturales."
+  },
+  {
+    "carrera": "Matemáticas",
+    "descripcion": "Investiga estructuras abstractas y desarrolla modelos numéricos para resolver problemas complejos en ciencia, tecnología y economía."
+  },
+  {
+    "carrera": "Química",
+    "descripcion": "Estudia la composición y reacciones de la materia para desarrollar nuevos compuestos y procesos en laboratorios de investigación e industria."
+  },
+  {
+    "carrera": "Trabajo Social",
+    "descripcion": "Promueve el cambio social y el fortalecimiento de comunidades mediante la intervención en problemas de vulnerabilidad y justicia social."
+  },
+  {
+    "carrera": "Finanzas",
+    "descripcion": "Especializada en la gestión de inversiones, mercados de capitales y planeación financiera para maximizar el valor de las organizaciones."
+  },
+  {
+    "carrera": "Turismo y Hotelería",
+    "descripcion": "Gestiona servicios turísticos y hoteleros con enfoque en el desarrollo sostenible, la interculturalidad y la calidad en el servicio."
+  },
+  {
+    "carrera": "Historia",
+    "descripcion": "Analiza los procesos sociales y políticos del pasado para comprender la identidad actual y preservar la memoria cultural de las sociedades."
   }
 ]
