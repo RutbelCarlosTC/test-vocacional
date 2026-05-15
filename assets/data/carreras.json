@@ -88,6 +88,22 @@
     "descripcion": "Estudia la composición y estructura de la tierra para la explotación de recursos minerales, hidrocarburos y la prevención de riesgos geológicos."
   },
   {
+    "carrera": "Educación Inicial",
+    "descripcion": "Especialidad en el desarrollo integral de niños de 0 a 5 años, fomentando el aprendizaje a través del juego y el estímulo temprano."
+  },
+  {
+    "carrera": "Educación Primaria",
+    "descripcion": "Forma profesionales para la enseñanza básica de niños de 6 a 12 años, desarrollando competencias fundamentales en diversas áreas del saber."
+  },
+  {
+    "carrera": "Educación Secundaria",
+    "descripcion": "Prepara docentes especializados en disciplinas específicas para guiar el aprendizaje de adolescentes y jóvenes en su etapa escolar final."
+  },
+  {
+    "carrera": "Microbiología",
+    "descripcion": "Estudio de los microorganismos, su biología, ecología y aplicaciones en salud, industria y medio ambiente."
+  },
+  {
     "carrera": "Educación",
     "descripcion": "Forma docentes en niveles Inicial, Primaria y Secundaria, capacitados para la mediación del aprendizaje y la gestión de instituciones educativas."
   },
@@ -133,7 +149,7 @@
   },
   {
     "carrera": "Ingeniería Electrónica",
-    "electronics": "Desarrolla circuitos y sistemas electrónicos para el procesamiento de señales, automatización industrial y control de telecomunicaciones."
+    "descripcion": "Desarrolla circuitos y sistemas electrónicos para el procesamiento de señales, automatización industrial y control de telecomunicaciones."
   },
   {
     "carrera": "Ingeniería Geofísica",
