@@ -3,6 +3,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../models/user_profile.dart';
 import '../services/profile_manager.dart';
 import '../services/tour_service.dart';
+import '../widgets/countdown_banner.dart';
 import 'profile_selection_screen.dart';
 import 'area_selection_screen.dart';
 import 'global_results_screen.dart';
@@ -115,59 +116,68 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.zero,
         children: [
-          Center(
-            child: Image.asset(
-              'assets/ENRUTAT_LOGO.png',
-              height: 250,
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Saludo
-          _WelcomeBanner(profile: _profile),
-          const SizedBox(height: 32),
+          const CountdownBanner(),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Image.asset(
+                    'assets/ENRUTAT_LOGO.png',
+                    height: 250,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Saludo
+                _WelcomeBanner(profile: _profile),
+                const SizedBox(height: 32),
 
-          const Text(
-            '¿Qué deseas hacer?',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
+                const Text(
+                  '¿Qué deseas hacer?',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
 
-          // Botón Evaluar
-          _MenuCard(
-            key: _evalKey,
-            icon: Icons.assignment_outlined,
-            title: 'Realizar evaluación',
-            subtitle: 'Completa un test de orientación vocacional.',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const AreaSelectionScreen()),
-              );
-            },
-          ),
-          const SizedBox(height: 14),
+                // Botón Evaluar
+                _MenuCard(
+                  key: _evalKey,
+                  icon: Icons.assignment_outlined,
+                  title: 'Realizar evaluación',
+                  subtitle: 'Completa un test de orientación vocacional.',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const AreaSelectionScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 14),
 
-          // Botón Consultar
-          _MenuCard(
-            key: _resultsKey,
-            icon: Icons.history,
-            title: 'Consultar resultados',
-            subtitle: 'Revisa tus evaluaciones anteriores.',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const GlobalResultsScreen()),
-              );
-            },
-          ),
-          const SizedBox(height: 40),
-          Center(
-            child: Image.asset(
-              'assets/LOGO CEPRUNSA-03.png',
-              height: 40,
+                // Botón Consultar
+                _MenuCard(
+                  key: _resultsKey,
+                  icon: Icons.history,
+                  title: 'Consultar resultados',
+                  subtitle: 'Revisa tus evaluaciones anteriores.',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const GlobalResultsScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 40),
+                Center(
+                  child: Image.asset(
+                    'assets/LOGO CEPRUNSA-03.png',
+                    height: 40,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
