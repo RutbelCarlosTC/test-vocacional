@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'theme/app_theme.dart';
 import 'services/profile_manager.dart';
 import 'services/evaluation_service.dart';
@@ -8,7 +9,8 @@ import 'screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await EvaluationService.init();
   runApp(const EnrutaTApp());
 }
@@ -53,10 +55,15 @@ class _SplashRouterState extends State<_SplashRouter> {
   }
 
   Future<void> _redirect() async {
+    // Realizamos la lógica de perfil mientras el Splash Nativo sigue visible
     final manager = ProfileManager();
     final showOnboarding = await manager.shouldShowOnboarding();
+    final hasSession = await manager.hasActiveSession();
     
     if (!mounted) return;
+
+    // Una vez decidida la ruta, quitamos el Splash nativo
+    FlutterNativeSplash.remove();
 
     if (showOnboarding) {
       Navigator.pushReplacement(
@@ -66,8 +73,6 @@ class _SplashRouterState extends State<_SplashRouter> {
       return;
     }
 
-    final hasSession = await manager.hasActiveSession();
-    if (!mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -79,8 +84,11 @@ class _SplashRouterState extends State<_SplashRouter> {
 
   @override
   Widget build(BuildContext context) {
+    // Retornamos un contenedor con el mismo color de fondo del splash nativo
+    // para que no haya parpadeos antes de la navegación.
     return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+      backgroundColor: Color(0xFF1A1F3C),
+      body: SizedBox.expand(),
     );
   }
 }
