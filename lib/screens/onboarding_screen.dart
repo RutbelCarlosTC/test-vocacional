@@ -15,21 +15,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingData> _pages = [
     OnboardingData(
-      title: '¡Bienvenido a EnrutaT!',
+      title: '¡Bienvenido a ConoceT!',
       description: 'Tu brújula para descubrir tu camino profesional. Estamos aquí para ayudarte a tomar la mejor decisión para tu futuro.',
-      image: 'assets/ENRUTAT_LOGO.png',
+      image: 'assets/CONOCET_LOGO.png',
       icon: Icons.explore_outlined,
     ),
     OnboardingData(
       title: 'Preferencias Profesionales',
       description: 'Descubre qué áreas de estudio te apasionan. Este test evalúa tus intereses en diferentes campos del conocimiento.',
-      image: 'assets/ENRUTAT_LOGO.png',
+      image: 'assets/CONOCET_LOGO.png',
       icon: Icons.auto_stories_outlined,
     ),
     OnboardingData(
       title: 'Perfil de Personalidad',
       description: 'Conoce tus rasgos y fortalezas personales. Entender cómo eres te ayudará a encontrar la carrera que mejor se adapte a tu forma de ser.',
-      image: 'assets/ENRUTAT_LOGO.png',
+      image: 'assets/CONOCET_LOGO.png',
       icon: Icons.psychology_outlined,
     ),
   ];

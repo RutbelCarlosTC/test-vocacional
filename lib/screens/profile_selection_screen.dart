@@ -76,7 +76,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EnrutaT'),
+        title: const Text('ConoceT'),
         centerTitle: true,
       ),
       body: _loading
@@ -92,7 +92,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                       children: [
                         Center(
                           child: Image.asset(
-                            'assets/ENRUTAT_LOGO.png',
+                            'assets/CONOCET_LOGO.png',
                             height: 200,
                           ),
                         ),

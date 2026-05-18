@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Center(
                   child: Image.asset(
-                    'assets/ENRUTAT_LOGO.png',
+                    'assets/CONOCET_LOGO.png',
                     height: 250,
                   ),
                 ),

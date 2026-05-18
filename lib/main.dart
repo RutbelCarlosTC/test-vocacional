@@ -12,16 +12,16 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await EvaluationService.init();
-  runApp(const EnrutaTApp());
+  runApp(const ConoceTApp());
 }
 
-class EnrutaTApp extends StatelessWidget {
-  const EnrutaTApp({super.key});
+class ConoceTApp extends StatelessWidget {
+  const ConoceTApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'EnrutaT',
+      title: 'ConoceT',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       localizationsDelegates: const [
