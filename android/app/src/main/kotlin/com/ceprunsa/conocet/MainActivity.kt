@@ -1,4 +1,4 @@
-package com.example.test_vocacional
+package com.ceprunsa.conocet
 
 import io.flutter.embedding.android.FlutterActivity
 

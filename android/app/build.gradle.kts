@@ -16,7 +16,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.test_vocacional"
+    namespace = "com.ceprunsa.conocet"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "30.0.14904198"
 
@@ -41,7 +41,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.test_vocacional"
+        applicationId = "com.ceprunsa.conocet"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
