@@ -5,6 +5,7 @@ import '../models/evaluation_result.dart';
 import '../services/evaluation_service.dart';
 import '../services/profile_manager.dart';
 import '../services/tour_service.dart';
+import '../theme/app_colors.dart';
 import 'result_screen.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _QuizScreenState extends State<QuizScreen>
   final List<AnswerRecord> _answers = [];
   int _currentIndex = 0;
   bool _loading = true;
+  bool _isProcessing = false;
   OptionModel? _selectedOption;
 
   late AnimationController _animController;
@@ -245,6 +247,14 @@ class _QuizScreenState extends State<QuizScreen>
         return;
       }
 
+      // Mostrar pantalla de procesamiento
+      setState(() => _isProcessing = true);
+
+      // Simular tiempo de procesamiento
+      await Future.delayed(const Duration(milliseconds: 3000));
+
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -324,6 +334,38 @@ class _QuizScreenState extends State<QuizScreen>
   Widget build(BuildContext context) {
     if (_loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_isProcessing) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/CONOCET_LOGO.png',
+                  height: 200,
+                ),
+                const SizedBox(height: 48),
+                const CircularProgressIndicator(),
+                const SizedBox(height: 32),
+                const Text(
+                  'Estamos analizando tus respuestas para generar tu perfil. ¡Ya casi terminamos!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     }
 
     final question = _questions[_currentIndex];
