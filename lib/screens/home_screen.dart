@@ -43,16 +43,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startTour() {
+    TargetPosition? evalPosition;
+    TargetPosition? resultsPosition;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Calcular posición para Evaluación (ancho completo)
+    final evalCtx = _evalKey.currentContext;
+    if (evalCtx != null) {
+      final box = evalCtx.findRenderObject() as RenderBox?;
+      if (box != null) {
+        final offset = box.localToGlobal(Offset.zero);
+        evalPosition = TargetPosition(
+          Size(screenWidth, box.size.height),
+          Offset(0, offset.dy),
+        );
+      }
+    }
+
+    // Calcular posición para Resultados (ancho completo)
+    final resultsCtx = _resultsKey.currentContext;
+    if (resultsCtx != null) {
+      final box = resultsCtx.findRenderObject() as RenderBox?;
+      if (box != null) {
+        final offset = box.localToGlobal(Offset.zero);
+        resultsPosition = TargetPosition(
+          Size(screenWidth, box.size.height),
+          Offset(0, offset.dy),
+        );
+      }
+    }
+
     TourService.showTour(
       context,
       targets: [
         TourService.createTarget(
           key: _evalKey,
+          targetPosition: evalPosition,
           title: 'Realizar Evaluación',
           description: 'Presiona aquí para comenzar tus test vocacionales.',
         ),
         TourService.createTarget(
           key: _resultsKey,
+          targetPosition: resultsPosition,
           title: 'Tus Resultados',
           description: 'Aquí podrás ver el progreso y resultados de tus test.',
         ),
