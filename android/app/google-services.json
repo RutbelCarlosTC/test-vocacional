@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "602768561452",
+    "project_id": "conocet-6836f",
+    "storage_bucket": "conocet-6836f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602768561452:android:cf75cc208f74a562460889",
+        "android_client_info": {
+          "package_name": "com.ceprunsa.conocet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSLDvbooMhVAL9V6g9bbT6fNyKD4zDUuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

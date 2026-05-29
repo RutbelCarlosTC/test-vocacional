@@ -8,12 +8,15 @@ import 'services/evaluation_service.dart';
 import 'screens/profile_selection_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // ← CAMBIAR AQUÍ
+  );
   await EvaluationService.init();
 
   runApp(const ConoceTApp());
