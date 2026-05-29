@@ -5,6 +5,7 @@ import '../models/evaluation_result.dart';
 import '../services/evaluation_service.dart';
 import '../services/profile_manager.dart';
 import '../services/tour_service.dart';
+import '../services/firebase_service.dart';
 import '../theme/app_colors.dart';
 import 'result_screen.dart';
 
@@ -245,6 +246,17 @@ class _QuizScreenState extends State<QuizScreen>
       if (widget.area == EvaluationArea.personalidad && !attempt.isValid) {
         _showInvalidPersonalityDialog();
         return;
+      }
+
+      // SUBIR A FIREBASE
+      // Obtenemos el perfil completo para tener todos los datos requeridos
+      final profile = await ProfileManager().getActiveProfile();
+      if (profile != null) {
+        // No usamos 'await' para no bloquear la UI, se sube en segundo plano
+        FirebaseService().uploadEvaluationResult(
+          profile: profile,
+          attempt: attempt,
+        );
       }
 
       // Mostrar pantalla de procesamiento
