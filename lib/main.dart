@@ -5,6 +5,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'theme/app_theme.dart';
 import 'services/profile_manager.dart';
 import 'services/evaluation_service.dart';
+import 'services/sync_service.dart';
 import 'screens/profile_selection_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
@@ -18,6 +19,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform, // ← CAMBIAR AQUÍ
   );
   await EvaluationService.init();
+
+  // Intentar sincronización inicial en segundo plano
+  SyncService().syncUnsyncedResults();
 
   runApp(const ConoceTApp());
 }

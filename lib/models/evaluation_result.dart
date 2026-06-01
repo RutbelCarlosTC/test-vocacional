@@ -130,6 +130,9 @@ class AreaAttempt extends HiveObject {
   @HiveField(11)
   final String scoringType;
 
+  @HiveField(12)
+  final bool isSynced;
+
   AreaAttempt({
     required this.attemptNumber,
     required this.date,
@@ -143,6 +146,7 @@ class AreaAttempt extends HiveObject {
     this.dimensionScores = const [],
     this.isValid = true,
     this.scoringType = 'affinity',
+    this.isSynced = false,
   });
 
   double get percentage =>
@@ -167,6 +171,24 @@ class AreaAttempt extends HiveObject {
     } catch (_) {
       return null;
     }
+  }
+
+  AreaAttempt copyWith({bool? isSynced}) {
+    return AreaAttempt(
+      attemptNumber: attemptNumber,
+      date: date,
+      area: area,
+      answers: answers,
+      totalScore: totalScore,
+      maxPossibleScore: maxPossibleScore,
+      afinidadPrimaria: afinidadPrimaria,
+      afinidadSecundaria: afinidadSecundaria,
+      afinidadTerciaria: afinidadTerciaria,
+      dimensionScores: dimensionScores,
+      isValid: isValid,
+      scoringType: scoringType,
+      isSynced: isSynced ?? this.isSynced,
+    );
   }
 }
 

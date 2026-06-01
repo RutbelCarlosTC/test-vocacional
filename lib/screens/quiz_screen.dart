@@ -6,6 +6,7 @@ import '../services/evaluation_service.dart';
 import '../services/profile_manager.dart';
 import '../services/tour_service.dart';
 import '../services/firebase_service.dart';
+import '../services/sync_service.dart';
 import '../theme/app_colors.dart';
 import 'result_screen.dart';
 
@@ -248,15 +249,25 @@ class _QuizScreenState extends State<QuizScreen>
         return;
       }
 
-      // SUBIR A FIREBASE
-      // Obtenemos el perfil completo para tener todos los datos requeridos
+      // SUBIR A FIREBASE (Si hay internet)
       final profile = await ProfileManager().getActiveProfile();
       if (profile != null) {
-        // No usamos 'await' para no bloquear la UI, se sube en segundo plano
-        FirebaseService().uploadEvaluationResult(
-          profile: profile,
-          attempt: attempt,
-        );
+        // Ejecutamos en segundo plano
+        SyncService().hasInternet().then((hasNet) async {
+          if (hasNet) {
+            final success = await FirebaseService().uploadEvaluationResult(
+              profile: profile,
+              attempt: attempt,
+            );
+            if (success) {
+              await _evalService.markAttemptAsSynced(
+                widget.profileId,
+                widget.area.jsonKey,
+                attempt.attemptNumber,
+              );
+            }
+          }
+        });
       }
 
       // Mostrar pantalla de procesamiento

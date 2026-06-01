@@ -162,6 +162,28 @@ class EvaluationService {
     return attempt;
   }
 
+  // ── Sincronización ──────────────────────────────────────
+
+  Future<void> markAttemptAsSynced(
+      String profileId, String areaKey, int attemptNumber) async {
+    final progress = _box.get('${profileId}_$areaKey');
+    if (progress == null) return;
+
+    final updatedAttempts = progress.attempts.map((a) {
+      if (a.attemptNumber == attemptNumber) {
+        return a.copyWith(isSynced: true);
+      }
+      return a;
+    }).toList();
+
+    final updatedProgress = progress.copyWith(attempts: updatedAttempts);
+    await _box.put('${profileId}_$areaKey', updatedProgress);
+  }
+
+  List<AreaProgress> getAllProgress() {
+    return _box.values.toList();
+  }
+
   /// Cálculo específico para Personalidad: 5 dimensiones, 3 ítems cada una.
   /// Rango 3-15 puntos.
   List<DimensionScore> _calcDimensionScoresPersonalidad(

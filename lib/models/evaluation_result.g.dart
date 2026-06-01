@@ -118,13 +118,14 @@ class AreaAttemptAdapter extends TypeAdapter<AreaAttempt> {
       dimensionScores: (fields[9] as List).cast<DimensionScore>(),
       isValid: fields[10] as bool,
       scoringType: fields[11] as String,
+      isSynced: fields[12] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, AreaAttempt obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.attemptNumber)
       ..writeByte(1)
@@ -148,7 +149,9 @@ class AreaAttemptAdapter extends TypeAdapter<AreaAttempt> {
       ..writeByte(10)
       ..write(obj.isValid)
       ..writeByte(11)
-      ..write(obj.scoringType);
+      ..write(obj.scoringType)
+      ..writeByte(12)
+      ..write(obj.isSynced);
   }
 
   @override

@@ -10,7 +10,8 @@ class FirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Sube el resultado de un test a Firebase Firestore
-  Future<void> uploadEvaluationResult({
+  /// Retorna true si se subió exitosamente, false en caso contrario
+  Future<bool> uploadEvaluationResult({
     required UserProfile profile,
     required AreaAttempt attempt,
   }) async {
@@ -26,6 +27,7 @@ class FirebaseService {
         'status': profile.academicStatus.label,
         'areaEvaluada': attempt.area,
         'numeroIntento': attempt.attemptNumber,
+        'userId': profile.id, // Añadimos userId para facilitar seguimiento
       };
 
       // Si es el test de preferencias profesionales
@@ -50,8 +52,10 @@ class FirebaseService {
       await _firestore.collection('evaluaciones').add(data);
       
       print('Resultado subido exitosamente a Firebase');
+      return true;
     } catch (e) {
       print('Error al subir a Firebase: $e');
+      return false;
       // No lanzamos error para no interrumpir el flujo del usuario si falla el internet
       // pero podrías manejarlo según tu necesidad.
     }

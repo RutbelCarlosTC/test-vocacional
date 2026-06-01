@@ -3,6 +3,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../models/user_profile.dart';
 import '../services/profile_manager.dart';
 import '../services/tour_service.dart';
+import '../services/sync_service.dart';
 import '../widgets/countdown_banner.dart';
 import 'profile_selection_screen.dart';
 import 'area_selection_screen.dart';
@@ -28,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadProfile();
+    // Intentar sincronizar datos pendientes al entrar al inicio
+    SyncService().syncUnsyncedResults();
   }
 
   Future<void> _loadProfile() async {
