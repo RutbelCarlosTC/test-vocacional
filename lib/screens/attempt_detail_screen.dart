@@ -9,6 +9,7 @@ import '../widgets/attempt_detail/personality_radar_chart.dart';
 import '../widgets/attempt_detail/advice_boxes.dart';
 import '../widgets/attempt_detail/podium_widget.dart';
 import '../widgets/attempt_detail/afinidad_row.dart';
+import '../services/sync_service.dart';
 
 class AttemptDetailScreen extends StatefulWidget {
   final AreaAttempt attempt;
@@ -27,20 +28,29 @@ class AttemptDetailScreen extends StatefulWidget {
 class _AttemptDetailScreenState extends State<AttemptDetailScreen> {
   Map<String, String> _careerDescriptions = {};
   Map<String, dynamic> _personalityAdvice = {};
-  bool _loadingData = false;
+  bool _loadingData = true;
 
   @override
   void initState() {
     super.initState();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    // 1. Sincronizar con Firestore si hay internet
+    await SyncService().syncUnsyncedResults();
+
+    // 2. Cargar datos locales (descripciones/consejos)
     if (widget.area == EvaluationArea.preferencias) {
-      _loadCareerDescriptions();
+      await _loadCareerDescriptions();
     } else if (widget.area == EvaluationArea.personalidad) {
-      _loadPersonalityAdvice();
+      await _loadPersonalityAdvice();
+    } else {
+      setState(() => _loadingData = false);
     }
   }
 
   Future<void> _loadCareerDescriptions() async {
-    setState(() => _loadingData = true);
     try {
       final String response =
           await rootBundle.loadString('assets/data/carreras.json');
@@ -49,29 +59,32 @@ class _AttemptDetailScreenState extends State<AttemptDetailScreen> {
       for (var item in data) {
         descriptions[item['carrera']] = item['descripcion'];
       }
-      setState(() {
-        _careerDescriptions = descriptions;
-        _loadingData = false;
-      });
+      if (mounted) {
+        setState(() {
+          _careerDescriptions = descriptions;
+          _loadingData = false;
+        });
+      }
     } catch (e) {
       debugPrint('Error cargando descripciones de carreras: $e');
-      setState(() => _loadingData = false);
+      if (mounted) setState(() => _loadingData = false);
     }
   }
 
   Future<void> _loadPersonalityAdvice() async {
-    setState(() => _loadingData = true);
     try {
       final String response =
           await rootBundle.loadString('assets/data/consejos_personalidad.json');
       final Map<String, dynamic> data = json.decode(response);
-      setState(() {
-        _personalityAdvice = data;
-        _loadingData = false;
-      });
+      if (mounted) {
+        setState(() {
+          _personalityAdvice = data;
+          _loadingData = false;
+        });
+      }
     } catch (e) {
       debugPrint('Error cargando consejos de personalidad: $e');
-      setState(() => _loadingData = false);
+      if (mounted) setState(() => _loadingData = false);
     }
   }
 
@@ -86,7 +99,32 @@ class _AttemptDetailScreenState extends State<AttemptDetailScreen> {
         title: Text('Intento ${attempt.attemptNumber} - ${widget.area.label}'),
       ),
       body: _loadingData
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/CONOCET_LOGO.png',
+                      height: 150,
+                    ),
+                    const SizedBox(height: 32),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Estamos preparando tus resultados...',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../models/user_profile.dart';
 import 'evaluation_service.dart';
 import 'firebase_service.dart';
 import 'profile_manager.dart';
@@ -12,6 +13,8 @@ class SyncService {
   final FirebaseService _firebaseService = FirebaseService();
   final ProfileManager _profileManager = ProfileManager();
 
+  bool _isSyncing = false;
+
   /// Verifica si hay conexión a internet
   Future<bool> hasInternet() async {
     try {
@@ -24,37 +27,43 @@ class SyncService {
 
   /// Sincroniza todos los intentos no sincronizados
   Future<void> syncUnsyncedResults() async {
+    if (_isSyncing) return;
     if (!await hasInternet()) return;
 
-    final allProgress = _evalService.getAllProgress();
-    final profiles = await _profileManager.getProfiles();
+    _isSyncing = true;
+    try {
+      final allProgress = _evalService.getAllProgress();
+      final profiles = await _profileManager.getProfiles();
 
-    for (var progress in allProgress) {
-      UserProfile? profile;
-      try {
-        profile = profiles.firstWhere((p) => p.id == progress.profileId);
-      } catch (_) {
-        profile = null;
-      }
+      for (var progress in allProgress) {
+        UserProfile? profile;
+        try {
+          profile = profiles.firstWhere((p) => p.id == progress.profileId);
+        } catch (_) {
+          profile = null;
+        }
 
-      if (profile == null) continue;
+        if (profile == null) continue;
 
-      for (var attempt in progress.attempts) {
-        if (!attempt.isSynced) {
-          final success = await _firebaseService.uploadEvaluationResult(
-            profile: profile,
-            attempt: attempt,
-          );
-
-          if (success) {
-            await _evalService.markAttemptAsSynced(
-              progress.profileId,
-              progress.area,
-              attempt.attemptNumber,
+        for (var attempt in progress.attempts) {
+          if (!attempt.isSynced) {
+            final success = await _firebaseService.uploadEvaluationResult(
+              profile: profile,
+              attempt: attempt,
             );
+
+            if (success) {
+              await _evalService.markAttemptAsSynced(
+                progress.profileId,
+                progress.area,
+                attempt.attemptNumber,
+              );
+            }
           }
         }
       }
+    } finally {
+      _isSyncing = false;
     }
   }
 }

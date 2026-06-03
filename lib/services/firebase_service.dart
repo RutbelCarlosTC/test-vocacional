@@ -47,11 +47,11 @@ class FirebaseService {
         }).toList();
       }
 
-      // Guardar en la colección 'evaluaciones'
-      // Se usa un documento con ID automático, o podrías usar profileId_area_intento
-      await _firestore.collection('evaluaciones').add(data);
+      // Guardar en la colección 'evaluaciones' usando un ID único para evitar duplicados
+      final String docId = '${profile.id}_${attempt.area}_${attempt.attemptNumber}';
+      await _firestore.collection('evaluaciones').doc(docId).set(data);
       
-      print('Resultado subido exitosamente a Firebase');
+      print('Resultado subido exitosamente a Firebase (ID: $docId)');
       return true;
     } catch (e) {
       print('Error al subir a Firebase: $e');
