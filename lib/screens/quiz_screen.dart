@@ -33,6 +33,7 @@ class _QuizScreenState extends State<QuizScreen>
   int _currentIndex = 0;
   bool _loading = true;
   bool _isProcessing = false;
+  bool _canNavigate = true;
   OptionModel? _selectedOption;
 
   late AnimationController _animController;
@@ -163,7 +164,7 @@ class _QuizScreenState extends State<QuizScreen>
   }
 
   Future<void> _handleBack() async {
-    if (_currentIndex > 0) {
+    if (_currentIndex > 0 && _canNavigate) {
       if (_selectedOption != null) {
         final question = _questions[_currentIndex];
         final answer = AnswerRecord(
@@ -207,7 +208,9 @@ class _QuizScreenState extends State<QuizScreen>
   }
 
   Future<void> _handleNext() async {
-    if (_selectedOption == null) return;
+    if (_selectedOption == null || !_canNavigate) return;
+
+    setState(() => _canNavigate = false);
 
     final question = _questions[_currentIndex];
     final existingIdx =
@@ -241,6 +244,7 @@ class _QuizScreenState extends State<QuizScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('No se pudo guardar el intento.')),
         );
+        setState(() => _canNavigate = true);
         return;
       }
 
@@ -296,8 +300,14 @@ class _QuizScreenState extends State<QuizScreen>
         lastIndex: _currentIndex + 1,
       );
 
+      // Esperar un segundo antes de pasar a la siguiente pregunta (evita bugs por rapidez)
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (!mounted) return;
+
       setState(() {
         _currentIndex++;
+        _canNavigate = true;
         final nextQuestion = _questions[_currentIndex];
         final nextAns = _answers.firstWhere(
           (a) => a.questionId == nextQuestion.id,
@@ -439,7 +449,7 @@ class _QuizScreenState extends State<QuizScreen>
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: OutlinedButton(
-                        onPressed: _handleBack,
+                        onPressed: _canNavigate ? _handleBack : null,
                         style: OutlinedButton.styleFrom(
                           minimumSize: const Size(0, 50),
                           shape: RoundedRectangleBorder(
@@ -453,7 +463,7 @@ class _QuizScreenState extends State<QuizScreen>
                 Expanded(
                   flex: 2,
                   child: ElevatedButton(
-                    onPressed: _selectedOption == null ? null : _handleNext,
+                    onPressed: (_selectedOption == null || !_canNavigate) ? null : _handleNext,
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(0, 50),
                       shape: RoundedRectangleBorder(
