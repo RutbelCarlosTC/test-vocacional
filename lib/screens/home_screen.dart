@@ -265,13 +265,17 @@ class _WelcomeBanner extends StatelessWidget {
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(
-                  status,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
+                if (profile?.academicStatus != AcademicStatus.egresado)
+                  Text(
+                    status,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onPrimaryContainer
+                          .withOpacity(0.8),
+                    ),
                   ),
-                ),
               ],
             ),
           ),

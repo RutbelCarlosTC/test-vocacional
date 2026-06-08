@@ -153,7 +153,7 @@ class _AttemptDetailScreenState extends State<AttemptDetailScreen> {
                       const WarningCard(
                         title: 'Perfil Indiferenciado',
                         message:
-                            'Tus puntajes en las tres áreas (FIS, BIO, SOC) son muy similares. '
+                            'Tus puntajes en las áreas evaluadas son muy similares. '
                             'Esto indica que tus intereses aún no están claramente jerarquizados. '
                             'Se sugiere buscar orientación vocacional personalizada.',
                       ),
