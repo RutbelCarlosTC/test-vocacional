@@ -6,6 +6,7 @@ import '../services/profile_manager.dart';
 import '../widgets/attempt_detail/podium_widget.dart';
 import '../widgets/attempt_detail/personality_radar_chart.dart';
 import 'result_screen.dart';
+import '../widgets/app_drawer.dart';
 
 class GlobalResultsScreen extends StatefulWidget {
   const GlobalResultsScreen({super.key});
@@ -62,6 +63,7 @@ class _GlobalResultsScreenState extends State<GlobalResultsScreen> {
       appBar: AppBar(
         title: const Text('Resultados Generales'),
       ),
+      drawer: const AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

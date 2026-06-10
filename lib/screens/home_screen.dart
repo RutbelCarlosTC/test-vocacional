@@ -8,6 +8,7 @@ import '../widgets/countdown_banner.dart';
 import 'profile_selection_screen.dart';
 import 'area_selection_screen.dart';
 import 'global_results_screen.dart';
+import '../widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -150,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      drawer: const AppDrawer(),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [

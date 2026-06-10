@@ -7,6 +7,7 @@ import '../services/profile_manager.dart';
 import '../services/tour_service.dart';
 import 'quiz_screen.dart';
 import 'result_screen.dart';
+import '../widgets/app_drawer.dart';
 
 class AreaSelectionScreen extends StatefulWidget {
   const AreaSelectionScreen({super.key});
@@ -122,6 +123,7 @@ class _AreaSelectionScreenState extends State<AreaSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Áreas de evaluación')),
+      drawer: const AppDrawer(),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
