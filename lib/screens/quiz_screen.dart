@@ -301,7 +301,7 @@ class _QuizScreenState extends State<QuizScreen>
       );
 
       // Esperar un segundo antes de pasar a la siguiente pregunta (evita bugs por rapidez)
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 400));
 
       if (!mounted) return;
 
