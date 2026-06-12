@@ -58,8 +58,8 @@ class AboutScreen extends StatelessWidget {
               'Dra. Maria Elena Rojas Zegarra',
               'Directora CEPRUNSA',
               'assets/comision/Maria Elena Rojas Zegarra.jpg',
-              'https://pe.linkedin.com/in/maria-elena-rojas-zegarra-685312243',
-              //'https://dina.concytec.gob.pe/appDirectorioCTI/VerDatosInvestigador.do?id_investigador=20316',
+              //'https://pe.linkedin.com/in/maria-elena-rojas-zegarra-685312243',
+              'https://dina.concytec.gob.pe/appDirectorioCTI/VerDatosInvestigador.do?id_investigador=20316',
             ),
             const SizedBox(height: 10),
             _buildDoctorCard(
@@ -67,8 +67,8 @@ class AboutScreen extends StatelessWidget {
               'Dr. Jose Miguel Rojas Hualpa',
               'Coordinador Administrativo',
               'assets/comision/Jose Miguel Rojas Hualpa.jpg',
-              'https://www.linkedin.com/search/results/all/?keywords=Jose%20Miguel%20Rojas%20Hualpa',
-              //'https://dina.concytec.gob.pe/appDirectorioCTI/VerDatosInvestigador.do?id_investigador=150092',
+              //'https://www.linkedin.com/search/results/all/?keywords=Jose%20Miguel%20Rojas%20Hualpa',
+              'https://dina.concytec.gob.pe/appDirectorioCTI/VerDatosInvestigador.do?id_investigador=150092',
 
             ),
             const SizedBox(height: 10),
@@ -77,8 +77,8 @@ class AboutScreen extends StatelessWidget {
               'Mg. Arnaldo Humberto Valdivia Loaiza',
               'Coordinador Académico',
               'assets/comision/Arnaldo Humbero Valdivia Loaiza.jpg',
-              'https://www.linkedin.com/search/results/all/?keywords=Arnaldo%20Humberto%20Valdivia%20Loaiza',
-              //'https://dina.concytec.gob.pe/appDirectorioCTI/VerDatosInvestigador.do?id_investigador=63640',
+              //'https://www.linkedin.com/search/results/all/?keywords=Arnaldo%20Humberto%20Valdivia%20Loaiza',
+              'https://dina.concytec.gob.pe/appDirectorioCTI/VerDatosInvestigador.do?id_investigador=63640',
             ),
             const SizedBox(height: 40),
             Center(
