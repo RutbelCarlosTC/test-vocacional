@@ -13,7 +13,7 @@
 
 | Organismo | Proyecto | Entregable | Autor | Versión | Fecha |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| CEPRUNSA | Test Vocacional CONOCET | Manual de Usuario Detallado | Equipo de Desarrollo | 02.00 | 10/06/2026 |
+| CEPRUNSA | Test Vocacional CONOCET | Manual de Usuario Detallado | Equipo de Desarrollo | 03.00 | 12/06/2026 |
 
 ---
 
@@ -23,6 +23,7 @@
 | :--- | :--- | :--- | :--- |
 | 01.00 | Versión inicial del manual de usuario | Equipo de Desarrollo | 24/05/2024 |
 | 02.00 | Manual detallado con descripción de todas las pantallas y flujos reales de la aplicación | Equipo de Desarrollo | 10/06/2026 |
+| 03.00 | Actualización de pantalla de creación de perfil: opción "Secundaria completa" reemplaza a "Egresado"; campo de carreras cambiado a input único con chips múltiples | Equipo de Desarrollo | 12/06/2026 |
 
 ---
 
@@ -164,15 +165,15 @@ Al pulsar **"Crear nuevo perfil"**, se accede a un formulario dividido en tres s
 
 ### Sección 2: Posibles Carreras
 
-Permite registrar hasta **3 carreras de interés** con autocompletado desde una base de datos de carreras cargada desde `assets/data/carreras.json`.
+Permite registrar **múltiples carreras de interés** mediante un único campo de texto con **chips** (etiquetas). Las carreras disponibles se cargan desde `assets/data/carreras.json`.
 
-| Campo | Obligatorio | Detalles |
+| Elemento | Obligatorio | Detalles |
 | :--- | :--- | :--- |
-| **Opción 1** | Sí (\*) | Al menos una carrera es requerida. Tiene autocompletado con búsqueda por texto. |
-| **Opción 2** | No | Opcional. Mismo autocompletado. |
-| **Opción 3** | No | Opcional. Mismo autocompletado. |
+| **Campo de búsqueda** | Sí (\*) | Al menos una carrera debe ser seleccionada. Al escribir parte del nombre de una carrera, aparece una lista de sugerencias. |
+| **Chips de carrera** | — | Cada carrera seleccionada aparece como un chip (etiqueta) dentro del campo. Se pueden agregar varias carreras sin límite fijo. |
+| **Eliminar chip (✕)** | — | Cada chip tiene un botón de cierre para quitar esa carrera de la selección. |
 
-> **Cómo usar el autocompletado:** Al escribir parte del nombre de una carrera, aparece una lista de sugerencias. Selecciona una para completar el campo automáticamente.
+> **Cómo usar:** Escribe parte del nombre de una carrera en el campo; selecciona una sugerencia de la lista desplegable para añadirla como chip. Repite el proceso para agregar más carreras. Para eliminar una carrera agregada, toca el ícono **✕** del chip correspondiente.
 
 ### Sección 3: Género
 
@@ -208,7 +209,7 @@ Lista de opciones de selección única (radio buttons). Las opciones disponibles
 | :--- | :--- |
 | *(según valores del enum)* | Opciones que representan el estado académico del usuario, ej. estudiante de 4to, 5to, egresado, etc. |
 
-> **Nota:** En la pantalla de inicio, si el usuario tiene el estado "Egresado", no se muestra el estado en el banner de bienvenida.
+> **Nota:** En la pantalla de inicio, si el usuario tiene el estado **"Secundaria completa"**, no se muestra el estado en el banner de bienvenida.
 
 ### Guardar Perfil
 

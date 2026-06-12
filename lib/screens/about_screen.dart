@@ -36,6 +36,14 @@ class AboutScreen extends StatelessWidget {
               'El CEPRUNSA es el Centro Preuniversitario de la Universidad Nacional de San Agustín de Arequipa, encargado de brindar una preparación académica de calidad para los postulantes a las diversas carreras profesionales que ofrece la universidad.',
               style: TextStyle(fontSize: 16),
             ),
+            const SizedBox(height: 15),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/comision/Ceprunsa-foto.JPG',
+                fit: BoxFit.cover,
+              ),
+            ),
             const SizedBox(height: 30),
             Text(
               'Comisión:',
