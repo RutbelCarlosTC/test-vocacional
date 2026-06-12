@@ -233,7 +233,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       controller.addListener(() {
                          _careerControllers[index].text = controller.text;
                       });
-                      
+
                       return TextFormField(
                         controller: controller,
                         focusNode: focusNode,

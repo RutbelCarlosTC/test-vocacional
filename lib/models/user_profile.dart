@@ -1,7 +1,7 @@
 enum AcademicStatus {
   secundaria1a4,
   secundaria5,
-  egresado,
+  secundariaCompleta,
 }
 
 extension AcademicStatusExtension on AcademicStatus {
@@ -11,8 +11,8 @@ extension AcademicStatusExtension on AcademicStatus {
         return 'Secundaria (1° - 4°)';
       case AcademicStatus.secundaria5:
         return 'Secundaria (5°)';
-      case AcademicStatus.egresado:
-        return 'Egresado';
+    case AcademicStatus.secundariaCompleta:
+        return 'Secundaria Completa';
     }
   }
 
@@ -22,8 +22,8 @@ extension AcademicStatusExtension on AcademicStatus {
         return 'secundaria_1_4';
       case AcademicStatus.secundaria5:
         return 'secundaria_5';
-      case AcademicStatus.egresado:
-        return 'egresado';
+      case AcademicStatus.secundariaCompleta:
+        return 'secundaria_completa';
     }
   }
 
@@ -33,10 +33,10 @@ extension AcademicStatusExtension on AcademicStatus {
         return AcademicStatus.secundaria1a4;
       case 'secundaria_5':
         return AcademicStatus.secundaria5;
-      case 'egresado':
-        return AcademicStatus.egresado;
+      case 'secundaria_completa':
+        return AcademicStatus.secundariaCompleta;
       default:
-        return AcademicStatus.egresado;
+        return AcademicStatus.secundariaCompleta;
     }
   }
 }

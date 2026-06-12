@@ -267,7 +267,7 @@ class _WelcomeBanner extends StatelessWidget {
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (profile?.academicStatus != AcademicStatus.egresado)
+                if (profile?.academicStatus != AcademicStatus.secundariaCompleta)
                   Text(
                     status,
                     style: TextStyle(
