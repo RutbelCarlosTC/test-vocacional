@@ -19,11 +19,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final List<TextEditingController> _careerControllers = [
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-  ];
+  final _careerSearchController = TextEditingController();
+  final _careerFocusNode = FocusNode();
+  final List<String> _selectedCareers = [];
 
   String _gender = 'Masculino';
   String _schoolType = 'Nacional'; // Nacional, Parroquial, Particular
@@ -43,9 +41,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-    for (var controller in _careerControllers) {
-      controller.dispose();
-    }
+    _careerSearchController.dispose();
+    _careerFocusNode.dispose();
     super.dispose();
   }
 
@@ -106,10 +103,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       birthDate: _birthDate!,
       academicStatus: _academicStatus!,
       schoolType: _schoolType,
-      possibleCareers: _careerControllers
-          .map((c) => c.text.trim())
-          .where((t) => t.isNotEmpty)
-          .toList(),
+      possibleCareers: _selectedCareers,
     );
 
     await _manager.saveProfile(profile);
@@ -208,51 +202,113 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   style: TextStyle(fontSize: 13, color: Colors.grey)),
               const SizedBox(height: 12),
 
-              // Carreras autocompletables
-              ...List.generate(3, (index) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Autocomplete<String>(
-                    optionsBuilder: (TextEditingValue textEditingValue) {
-                      if (textEditingValue.text == '') {
-                        return const Iterable<String>.empty();
-                      }
-                      return _allCareers.where((String option) {
-                        return option
-                            .toLowerCase()
-                            .contains(textEditingValue.text.toLowerCase());
-                      });
-                    },
-                    onSelected: (String selection) {
-                      _careerControllers[index].text = selection;
-                    },
-                    fieldViewBuilder:
-                        (context, controller, focusNode, onFieldSubmitted) {
-                      // Sincronizar con nuestro controlador
-                      controller.text = _careerControllers[index].text;
-                      controller.addListener(() {
-                         _careerControllers[index].text = controller.text;
-                      });
-
-                      return TextFormField(
-                        controller: controller,
-                        focusNode: focusNode,
-                        decoration: InputDecoration(
-                          labelText: 'Opción ${index + 1}${index == 0 ? " *" : ""}',
-                          labelStyle: index == 0 ? const TextStyle(color: Colors.black) : null,
-                          prefixIcon: const Icon(Icons.school_outlined),
+              FormField<List<String>>(
+                initialValue: _selectedCareers,
+                validator: (_) {
+                  if (_selectedCareers.isEmpty) {
+                    return 'Al menos una carrera es requerida';
+                  }
+                  return null;
+                },
+                builder: (fieldState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Chips arriba
+                      if (_selectedCareers.isNotEmpty) ...[
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _selectedCareers.map((career) {
+                            return InputChip(
+                              label: Text(career,
+                                  style: const TextStyle(fontSize: 13)),
+                              onDeleted: () {
+                                setState(() {
+                                  _selectedCareers.remove(career);
+                                  fieldState.didChange(_selectedCareers);
+                                });
+                              },
+                              deleteIconColor: Colors.red[400],
+                            );
+                          }).toList(),
                         ),
-                        validator: (v) {
-                          if (index == 0 && (v == null || v.isEmpty)) {
-                            return 'Al menos una carrera es requerida';
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                );
-              }),
+                        const SizedBox(height: 12),
+                      ],
+
+                      // Input de búsqueda abajo
+                      if (_selectedCareers.length < 3)
+                        RawAutocomplete<String>(
+                          textEditingController: _careerSearchController,
+                          focusNode: _careerFocusNode,
+                          optionsBuilder: (TextEditingValue textEditingValue) {
+                            if (textEditingValue.text.isEmpty) {
+                              return const Iterable<String>.empty();
+                            }
+                            return _allCareers.where((String option) {
+                              return option.toLowerCase().contains(
+                                      textEditingValue.text.toLowerCase()) &&
+                                  !_selectedCareers.contains(option);
+                            });
+                          },
+                          onSelected: (String selection) {
+                            setState(() {
+                              _selectedCareers.add(selection);
+                              fieldState.didChange(_selectedCareers);
+                            });
+                            // Limpiar el input después de seleccionar
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _careerSearchController.clear();
+                            });
+                          },
+                          fieldViewBuilder: (context, controller, focusNode,
+                              onFieldSubmitted) {
+                            return TextFormField(
+                              controller: controller,
+                              focusNode: focusNode,
+                              decoration: const InputDecoration(
+                                hintText: 'Escribe para buscar carrera...',
+                                prefixIcon: Icon(Icons.school_outlined),
+                              ),
+                            );
+                          },
+                          optionsViewBuilder: (context, onSelected, options) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4.0,
+                                child: SizedBox(
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    itemCount: options.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final String option = options.elementAt(index);
+                                      return ListTile(
+                                        title: Text(option),
+                                        onTap: () => onSelected(option),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      if (fieldState.hasError)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 12),
+                          child: Text(
+                            fieldState.errorText!,
+                            style:
+                                const TextStyle(color: Colors.red, fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
 
               const SizedBox(height: 14),
 
